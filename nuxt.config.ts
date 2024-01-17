@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       });
     },
   ],
+  runtimeConfig: {
+    dbUrl: "",
+  },
   vite: {
     vue: {
       template: {
