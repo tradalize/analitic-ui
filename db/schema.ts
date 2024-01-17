@@ -2,7 +2,7 @@ import {
   pgTable,
   serial,
   doublePrecision,
-  timestamp,
+  smallint,
   text,
   jsonb,
   integer,
@@ -23,9 +23,9 @@ export const trades = pgTable("trades", {
   id: serial("id").primaryKey().notNull(),
   direction: integer("direction"),
   open: doublePrecision("open").notNull(),
-  openTime: timestamp("openTime").notNull(),
+  openTime: smallint("openTime").notNull(),
   close: doublePrecision("close"),
-  closeTime: timestamp("closeTime"),
+  closeTime: smallint("closeTime"),
   backtestId: integer("backtest_id"),
 });
 
