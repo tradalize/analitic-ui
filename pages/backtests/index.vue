@@ -1,4 +1,6 @@
-<template>Backtests</template>
+<template>
+  <BacktestsTable />
+</template>
 
 <script setup lang="ts">
 definePageMeta({

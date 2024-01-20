@@ -12,6 +12,7 @@
     "d-kit:push": "drizzle-kit push:pg"
   },
   "devDependencies": {
+    "date-fns": "^3.3.0",
     "drizzle-kit": "^0.20.13",
     "nuxt": "^3.9.1",
     "vite-plugin-vuetify": "^2.0.1",
@@ -22,7 +23,9 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@tradalize/core": "^0.1.5",
+    "@tradalize/drizzle-adapter": "^0.1.0",
     "drizzle-orm": "^0.29.3",
+    "lightweight-charts": "^4.1.2",
     "postgres": "^3.4.3"
   }
 }
