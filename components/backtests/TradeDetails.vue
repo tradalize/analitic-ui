@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import DateColumn from "@/components/UI/DateColumn.vue";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
+import PercentColumn from "@/components/UI/PercentColumn.vue";
 import type { AnaliticTrade } from "@/server/types";
 import { TradeDetailsModalKey } from "./types";
+import TradeChart from "./TradeChart.vue";
 
 const isOpen = ref(false);
 const trade = ref<AnaliticTrade | null>(null);
@@ -42,13 +44,13 @@ provide(TradeDetailsModalKey, { openModal, closeModal });
 
           <v-col cols="3">
             <b>PnL:</b><br />
-            {{ (trade.pnl * 100).toFixed(2) }}%
+            <PercentColumn :number="trade.pnl" />
           </v-col>
 
-          <!-- <v-col cols="3">
+          <v-col cols="3">
             <b>PnL in points:</b><br />
-            {{ pnlInPoints }}
-          </v-col> -->
+            {{ (Number(trade.closePrice) - trade.openPrice) * trade.direction }}
+          </v-col>
 
           <v-col cols="3">
             <b>SL:</b><br />
@@ -61,11 +63,7 @@ provide(TradeDetailsModalKey, { openModal, closeModal });
           </v-col>
         </v-row>
 
-        <!-- <trade-chart
-          v-if="candleSticks"
-          :candles="candleSticks"
-          :trade="trade"
-        /> -->
+        <TradeChart :trade="trade" />
       </v-container>
     </v-card>
   </v-dialog>
