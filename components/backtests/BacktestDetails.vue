@@ -2,6 +2,7 @@
 import TradeDetails from "./TradeDetails.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
+import DetailsData from "./DetailsData.vue";
 
 type Props = {
   backtestId: string;
@@ -19,14 +20,10 @@ const { data: backtestAnalitic, pending } = await useFetch(
   <v-card v-else>
     <v-card-title primary-title> ID: {{ backtestId }} </v-card-title>
     <v-container>
-      <v-row v-if="backtestAnalitic?.summary">
-        <v-col
-          v-for="[field, val] in Object.entries(backtestAnalitic.summary)"
-          cols="3"
-        >
-          <b>{{ field }}:</b><br />{{ val }}
-        </v-col>
-      </v-row>
+      <DetailsData
+        v-if="backtestAnalitic?.summary"
+        v-bind="backtestAnalitic.summary"
+      />
 
       <TradeDetails v-if="backtestAnalitic">
         <EquityCurve :trades="backtestAnalitic.trades" />

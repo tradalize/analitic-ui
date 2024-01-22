@@ -15,15 +15,11 @@ const pnls = computed(() => {
   let balance = 1000;
 
   return props.trades.map((trade) => {
-    const pnl =
-      (((trade.closePrice as number) - trade.openPrice) / trade.openPrice) *
-      trade.direction;
-
-    balance = balance * (1 + pnl);
+    balance = balance * (1 + trade.pnl);
 
     return {
       time: Number(
-        ((trade.closeTime as number) / 1000).toFixed(0)
+        ((trade.openTime as number) / 1000).toFixed(0)
       ) as UTCTimestamp,
       value: balance,
     };
