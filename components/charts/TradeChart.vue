@@ -83,6 +83,8 @@ onMounted(async () => {
   addEma({
     chart,
     lineProps: {
+      title: "Slow EMA",
+      priceLineVisible: false,
       lineWidth: 2,
       color: "#33b864",
     },
@@ -93,6 +95,8 @@ onMounted(async () => {
   addEma({
     chart,
     lineProps: {
+      title: "Fast EMA",
+      priceLineVisible: false,
       lineWidth: 1,
       color: "#F1802D",
     },

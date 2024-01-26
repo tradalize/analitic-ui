@@ -3,14 +3,13 @@ import { BollingerBands } from "@debut/indicators";
 import type { IndicatorProps } from "./types";
 
 type BollingerBandsProps = IndicatorProps<
-  LineSeriesPartialOptions,
+  never,
   { period: number; stdDev: number }
 >;
 
 export function addBollingerBands({
   chart,
   candles,
-  lineProps = { lineWidth: 1 },
   indicatorProps,
 }: BollingerBandsProps) {
   const bb = new BollingerBands(indicatorProps.period, indicatorProps.stdDev);
@@ -32,9 +31,17 @@ export function addBollingerBands({
     }
   );
 
-  const bbLowerSeries = chart.addLineSeries(lineProps);
-  bbLowerSeries.setData(lowerSeries);
-
-  const bbUpperSeries = chart.addLineSeries(lineProps);
+  const bbUpperSeries = chart.addLineSeries({
+    title: "BB upper",
+    priceLineVisible: false,
+    lineWidth: 1,
+  });
   bbUpperSeries.setData(upperSeries);
+
+  const bbLowerSeries = chart.addLineSeries({
+    title: "BB lower",
+    priceLineVisible: false,
+    lineWidth: 1,
+  });
+  bbLowerSeries.setData(lowerSeries);
 }
