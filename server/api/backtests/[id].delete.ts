@@ -1,4 +1,4 @@
-import { deleteBacktests } from "@tradalize/drizzle-adapter/dist/pg";
+import { deleteBacktests } from "@tradalize/drizzle-adapter/dist/pg/index.js";
 
 export default defineEventHandler(async (event) => {
   const { dbUrl } = useRuntimeConfig(event);

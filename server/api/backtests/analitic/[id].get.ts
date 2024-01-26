@@ -1,5 +1,6 @@
 import { Position, getTradesSummary } from "@tradalize/core";
-import { type Trade, getBacktest } from "@tradalize/drizzle-adapter/dist/pg";
+import type { Trade } from "@tradalize/drizzle-adapter/dist/pg";
+import { getBacktest } from "@tradalize/drizzle-adapter/dist/pg/index.js";
 import type { AnaliticTrade } from "@/server/types";
 
 export default defineEventHandler(async (event) => {

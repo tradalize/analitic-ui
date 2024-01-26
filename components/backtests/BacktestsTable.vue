@@ -25,7 +25,8 @@ const deleteHandler = (id: number) => {
       <tr>
         <th>ID</th>
         <th>Strategy name</th>
-        <th>Strategy params</th>
+        <th>Symbol</th>
+        <th>Timeframe</th>
         <th></th>
       </tr>
     </thead>
@@ -34,7 +35,8 @@ const deleteHandler = (id: number) => {
       <tr v-for="backtest in backtests" :key="backtest.id">
         <td>{{ backtest.id }}</td>
         <td>{{ backtest.strategyName }}</td>
-        <td>{{ backtest.strategyParams }}</td>
+        <td>{{ backtest.strategyParams?.symbol }}</td>
+        <td>{{ backtest.strategyParams?.timeframe }}</td>
         <td>
           <div class="d-flex" :style="{ gap: '1rem' }">
             <v-btn variant="tonal" :to="`/backtests/${backtest.id}`">

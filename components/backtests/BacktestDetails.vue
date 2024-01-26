@@ -13,12 +13,25 @@ const props = defineProps<Props>();
 const { data: backtestAnalitic, pending } = await useFetch(
   `/api/backtests/analitic/${props.backtestId}`
 );
+
+const title = computed(() => {
+  const trade = backtestAnalitic.value?.trades.at(0);
+
+  if (!trade) {
+    return "";
+  }
+
+  return `${trade.symbol} ${trade.timeframe}`;
+});
 </script>
 
 <template>
   <v-skeleton-loader v-if="pending" type="card" />
   <v-card v-else>
-    <v-card-title primary-title> ID: {{ backtestId }} </v-card-title>
+    <v-card-title primary-title
+      >{{ backtestAnalitic?.strategyName }} ID: {{ backtestId }}
+      {{ title }}</v-card-title
+    >
     <v-container>
       <DetailsData
         v-if="backtestAnalitic?.summary"
