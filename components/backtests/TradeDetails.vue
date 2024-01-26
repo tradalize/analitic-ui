@@ -2,9 +2,12 @@
 import DateColumn from "@/components/UI/DateColumn.vue";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
+import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticTrade } from "@/server/types";
 import { TradeDetailsModalKey } from "./types";
-import TradeChart from "./TradeChart.vue";
+import TradeChart from "../charts/TradeChart.vue";
+
+defineProps<{ strategyParams: DefaultStrategyParams }>();
 
 const isOpen = ref(false);
 const trade = ref<AnaliticTrade | null>(null);
@@ -63,7 +66,7 @@ provide(TradeDetailsModalKey, { openModal, closeModal });
           </v-col>
         </v-row>
 
-        <TradeChart :trade="trade" />
+        <TradeChart :trade="trade" :strategy-params="strategyParams" />
       </v-container>
     </v-card>
   </v-dialog>

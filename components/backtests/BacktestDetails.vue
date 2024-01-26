@@ -3,6 +3,7 @@ import TradeDetails from "./TradeDetails.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";
+import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 
 type Props = {
   backtestId: string;
@@ -38,7 +39,10 @@ const title = computed(() => {
         v-bind="backtestAnalitic.summary"
       />
 
-      <TradeDetails v-if="backtestAnalitic">
+      <TradeDetails
+        v-if="backtestAnalitic"
+        :strategy-params="(backtestAnalitic.strategyParams as DefaultStrategyParams)"
+      >
         <EquityCurve :trades="backtestAnalitic.trades" />
 
         <TradesTable :trades="backtestAnalitic.trades" />

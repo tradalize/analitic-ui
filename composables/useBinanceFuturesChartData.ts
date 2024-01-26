@@ -1,5 +1,5 @@
 import type { Timeframe } from "@tradalize/core";
-import type { CandlestickData, UTCTimestamp } from "lightweight-charts";
+import type { OhlcData, UTCTimestamp } from "lightweight-charts";
 
 const BINANCE_FUTURES_API_HOST = "https://fapi.binance.com";
 
@@ -57,14 +57,12 @@ function rawKlineToCandlestick([
   high,
   low,
   close,
-  volume,
-]: RawKline) {
+]: RawKline): OhlcData {
   return {
     time: (openTime / 1000) as UTCTimestamp,
     open: parseFloat(open),
     high: parseFloat(high),
     low: parseFloat(low),
     close: parseFloat(close),
-    value: parseFloat(volume),
   };
 }

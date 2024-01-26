@@ -1,5 +1,5 @@
 import { Position, getTradesSummary } from "@tradalize/core";
-import type { Trade } from "@tradalize/drizzle-adapter/dist/pg";
+import type { Trade, Backtest } from "@tradalize/drizzle-adapter/dist/pg";
 import { getBacktest } from "@tradalize/drizzle-adapter/dist/pg/index.js";
 import type { AnaliticTrade } from "@/server/types";
 
@@ -7,10 +7,10 @@ export default defineEventHandler(async (event) => {
   const { dbUrl } = useRuntimeConfig(event);
   const id = getRouterParam(event, "id");
 
-  const backtest = await getBacktest(dbUrl, {
+  const backtest = (await getBacktest(dbUrl, {
     id: Number(id),
     withTrades: true,
-  });
+  })) as Backtest & { trades: Trade[] };
 
   const { trades, ...rest } = backtest;
 
