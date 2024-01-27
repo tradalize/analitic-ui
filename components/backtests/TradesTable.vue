@@ -3,7 +3,7 @@ import DateColumn from "@/components/UI/DateColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
 // import TradeDetails from "./TradeDetails.vue";
 import type { AnaliticTrade } from "@/server/types";
-import { TradeDetailsModalKey } from "./types";
+import { TradeDetailsModalKey } from "./TradeDetails/types";
 
 defineProps<{
   trades: AnaliticTrade[];

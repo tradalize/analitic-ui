@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TradeDetails from "./TradeDetails.vue";
+import TradeDetails from "./TradeDetails/index.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";

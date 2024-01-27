@@ -14,10 +14,12 @@ import { useBinanceFuturesChartData } from "@/composables/useBinanceFuturesChart
 import { getTimeframeInterval } from "@/utils/getTimeframeInterval";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import { addBollingerBands, addEma } from "./indicators";
+import type { IndicatorRecord } from "@/components/charts/indicators/types";
 
 const props = defineProps<{
   trade: AnaliticTrade;
   strategyParams: DefaultStrategyParams;
+  indicators?: IndicatorRecord[];
 }>();
 
 const { candles, pending } = await useBinanceFuturesChartData({
@@ -77,31 +79,31 @@ onMounted(async () => {
   addBollingerBands({
     chart,
     candles,
-    indicatorProps: { period: 15, stdDev: 1.5 },
+    indicatorParams: { period: 15, stdDev: 1.5 },
   });
 
   addEma({
     chart,
-    lineProps: {
+    lineParams: {
       title: "Slow EMA",
       priceLineVisible: false,
       lineWidth: 2,
       color: "#33b864",
     },
     candles,
-    indicatorProps: { period: 50 },
+    indicatorParams: { period: 50 },
   });
 
   addEma({
     chart,
-    lineProps: {
+    lineParams: {
       title: "Fast EMA",
       priceLineVisible: false,
       lineWidth: 1,
       color: "#F1802D",
     },
     candles,
-    indicatorProps: { period: 30 },
+    indicatorParams: { period: 30 },
   });
 
   if (props.trade.direction === POSITION_DIRECTION.Long) {

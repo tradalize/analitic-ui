@@ -1,18 +1,17 @@
-import type { LineSeriesPartialOptions, LineData } from "lightweight-charts";
+import type { LineData } from "lightweight-charts";
 import { BollingerBands } from "@debut/indicators";
 import type { IndicatorProps } from "./types";
 
-type BollingerBandsProps = IndicatorProps<
-  never,
-  { period: number; stdDev: number }
->;
+export type BollingerBandsParams = { period: number; stdDev: number };
+
+type BollingerBandsProps = IndicatorProps<BollingerBandsParams>;
 
 export function addBollingerBands({
   chart,
   candles,
-  indicatorProps,
+  indicatorParams,
 }: BollingerBandsProps) {
-  const bb = new BollingerBands(indicatorProps.period, indicatorProps.stdDev);
+  const bb = new BollingerBands(indicatorParams.period, indicatorParams.stdDev);
 
   const { upperSeries, lowerSeries } = candles.reduce(
     (acc, { time, close }) => {

@@ -2,13 +2,15 @@ import type { LineSeriesPartialOptions } from "lightweight-charts";
 import { EMA } from "@debut/indicators";
 import type { IndicatorProps } from "./types";
 
-type EMAProps = IndicatorProps<LineSeriesPartialOptions, { period: number }>;
+export type EMAParams = { period: number };
+
+type EMAProps = IndicatorProps<EMAParams>;
 
 export function addEma({
   chart,
-  lineProps,
+  lineParams,
   candles,
-  indicatorProps: { period },
+  indicatorParams: { period },
 }: EMAProps) {
   const ema = new EMA(period);
 
@@ -22,6 +24,6 @@ export function addEma({
     }
   }
 
-  const series = chart.addLineSeries(lineProps);
+  const series = chart.addLineSeries(lineParams);
   series.setData(seriesData);
 }

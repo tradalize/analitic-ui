@@ -1,4 +1,4 @@
-import { subDays, addDays } from "date-fns";
+import { subDays, addDays, subHours, addHours } from "date-fns";
 import type { AnaliticTrade } from "@/server/types";
 
 export function getTimeframeInterval(trade: AnaliticTrade) {
@@ -13,6 +13,12 @@ export function getTimeframeInterval(trade: AnaliticTrade) {
       return {
         startTime: subDays(new Date(trade.openTime), 14).getTime(),
         endTime: addDays(new Date(trade.closeTime), 14).getTime(),
+      };
+
+    case "5m":
+      return {
+        startTime: subHours(new Date(trade.openTime), 6).getTime(),
+        endTime: addHours(new Date(trade.closeTime), 6).getTime(),
       };
 
     default:
