@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import {
+  ref,
+  onMounted,
+  onUnmounted,
+  onBeforeUpdate,
+  getCurrentInstance,
+} from "vue";
 import { POSITION_DIRECTION } from "@tradalize/core";
 import {
   type SeriesMarker,
@@ -8,19 +14,20 @@ import {
   createChart,
   LineStyle,
   CrosshairMode,
+  type IChartApi,
 } from "lightweight-charts";
 import type { AnaliticTrade } from "@/server/types";
 import { useBinanceFuturesChartData } from "@/composables/useBinanceFuturesChartData";
 import { getTimeframeInterval } from "@/utils/getTimeframeInterval";
-import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
-import { addBollingerBands, addEma } from "./indicators";
-import type { IndicatorRecord } from "@/components/charts/indicators/types";
+import { SUPPORTED_INDICATORS, addBollingerBands, addEma } from "./indicators";
+import type { IndicatorRecord } from "./indicators/types";
 
 const props = defineProps<{
   trade: AnaliticTrade;
-  strategyParams: DefaultStrategyParams;
   indicators?: IndicatorRecord[];
 }>();
+
+console.log(props.indicators);
 
 const { candles, pending } = await useBinanceFuturesChartData({
   symbol: props.trade.symbol,
@@ -52,8 +59,10 @@ const getSellMarker = (
   text: `Sell @ ${price}`,
 });
 
+let chart: IChartApi;
+
 onMounted(async () => {
-  const chart = createChart(chartContainer.value, {
+  chart = createChart(chartContainer.value, {
     layout: {
       textColor: "white",
       background: { type: ColorType.Solid, color: "black" },
@@ -76,35 +85,37 @@ onMounted(async () => {
   const candlestickSeries = chart.addCandlestickSeries();
   candlestickSeries.setData(candles);
 
-  addBollingerBands({
-    chart,
-    candles,
-    indicatorParams: { period: 15, stdDev: 1.5 },
-  });
+  if (props.indicators && props.indicators.length > 0) {
+    for (const { key, lineParams, indicatorParams } of props.indicators) {
+      switch (key) {
+        case key.match(RegExp(SUPPORTED_INDICATORS.ema))?.input: {
+          addEma({
+            chart,
+            lineParams,
+            candles,
+            indicatorParams: {
+              period: 14,
+              ...indicatorParams,
+            },
+          });
+          break;
+        }
 
-  addEma({
-    chart,
-    lineParams: {
-      title: "Slow EMA",
-      priceLineVisible: false,
-      lineWidth: 2,
-      color: "#33b864",
-    },
-    candles,
-    indicatorParams: { period: 50 },
-  });
+        case "bollingerBands": {
+          addBollingerBands({
+            chart,
+            candles,
+            lineParams,
+            indicatorParams: { period: 15, stdDev: 1.5, ...indicatorParams },
+          });
+        }
 
-  addEma({
-    chart,
-    lineParams: {
-      title: "Fast EMA",
-      priceLineVisible: false,
-      lineWidth: 1,
-      color: "#F1802D",
-    },
-    candles,
-    indicatorParams: { period: 30 },
-  });
+        default: {
+          break;
+        }
+      }
+    }
+  }
 
   if (props.trade.direction === POSITION_DIRECTION.Long) {
     candlestickSeries.setMarkers([
@@ -149,6 +160,13 @@ onMounted(async () => {
   }
 
   chart.timeScale().fitContent();
+});
+
+onUnmounted(() => {
+  const instance = getCurrentInstance();
+  instance?.proxy?.$forceUpdate();
+
+  console.log("Update");
 });
 </script>
 

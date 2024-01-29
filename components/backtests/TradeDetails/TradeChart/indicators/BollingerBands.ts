@@ -10,6 +10,7 @@ export function addBollingerBands({
   chart,
   candles,
   indicatorParams,
+  lineParams,
 }: BollingerBandsProps) {
   const bb = new BollingerBands(indicatorParams.period, indicatorParams.stdDev);
 
@@ -31,16 +32,16 @@ export function addBollingerBands({
   );
 
   const bbUpperSeries = chart.addLineSeries({
+    ...lineParams,
     title: "BB upper",
     priceLineVisible: false,
-    lineWidth: 1,
   });
   bbUpperSeries.setData(upperSeries);
 
   const bbLowerSeries = chart.addLineSeries({
+    ...lineParams,
     title: "BB lower",
     priceLineVisible: false,
-    lineWidth: 1,
   });
   bbLowerSeries.setData(lowerSeries);
 }

@@ -6,7 +6,7 @@ import type {
 import type { EMAParams } from "./EMA";
 import type { BollingerBandsParams } from "./BollingerBands";
 import type { ObjectValues } from "@/utils/utility.types";
-import type { SupportedIndicators } from ".";
+import type { SUPPORTED_INDICATORS } from ".";
 
 export type IndicatorsParams = EMAParams | BollingerBandsParams;
 
@@ -20,10 +20,10 @@ export type IndicatorProps<
   indicatorParams: IndicatorParams;
 };
 
-export type SupportedIndicators = ObjectValues<typeof SupportedIndicators>;
+export type SupportedIndicators = ObjectValues<typeof SUPPORTED_INDICATORS>;
 
 export type IndicatorRecord<LineParams = LineSeriesPartialOptions> = {
-  key: SupportedIndicators;
+  key: SupportedIndicators | `/${SupportedIndicators}/`;
   indicatorParams?: IndicatorsParams;
   lineParams?: LineParams;
 };

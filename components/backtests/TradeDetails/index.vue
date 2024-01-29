@@ -2,15 +2,21 @@
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticTrade } from "@/server/types";
-import { TradeDetailsModalKey, IndicatorsListKey } from "./types";
-import TradeChart from "@/components/charts/TradeChart.vue";
+import {
+  TradeDetailsModalKey,
+  IndicatorsListKey,
+  type IndicatorsListApi,
+} from "./interface";
+import TradeChart from "./TradeChart/index.vue";
 import Summary from "./Summary.vue";
-import IndicatorsList from "./IndicatorsList/index.vue";
+import IndicatorsList from "./IndicatorsList.vue";
 import type {
   IndicatorRecord,
   IndicatorsParams,
   SupportedIndicators,
-} from "@/components/charts/indicators/types";
+} from "./TradeChart/indicators/types";
+import { SUPPORTED_INDICATORS } from "./TradeChart/indicators";
+import { useStorage } from "@vueuse/core";
 
 const props = defineProps<{ strategyParams: DefaultStrategyParams }>();
 
@@ -21,31 +27,55 @@ const openModal = (targetTrade: AnaliticTrade) => {
   trade.value = targetTrade;
   isOpen.value = true;
 };
-
 const closeModal = () => {
   trade.value = null;
   isOpen.value = false;
 };
 provide(TradeDetailsModalKey, { openModal, closeModal });
 
-const indicators = ref<IndicatorRecord[]>([]);
+const supportedIndicatorsRegexps = Object.values(SUPPORTED_INDICATORS).map(
+  (r) => RegExp(r)
+);
+const indicatorsLinesParams = useStorage<
+  IndicatorsListApi["indicatorsLinesParams"]
+>(
+  "indicators-lines",
+  () => {
+    const result: IndicatorsListApi["indicatorsLinesParams"] = {};
 
-const addIndicator = (key: SupportedIndicators) => {
-  const indicatorParams = props.strategyParams[key] as
-    | IndicatorsParams
-    | undefined;
+    for (const key of Object.keys(props.strategyParams)) {
+      if (supportedIndicatorsRegexps.some((r) => r.test(key))) {
+        result[key] = { title: key };
+      }
+    }
 
-  indicators.value.push({ key, indicatorParams });
-};
+    return result;
+  },
+  undefined,
+  { mergeDefaults: true }
+);
 
-const removeIndicator = (index: number) => {
-  indicators.value.splice(index, 1);
-};
+const indicators = computed<IndicatorRecord[]>(() => {
+  const indicators: IndicatorRecord[] = [];
+
+  for (const [indicatorKey, indicatorParams] of Object.entries(
+    props.strategyParams
+  )) {
+    if (supportedIndicatorsRegexps.some((r) => r.test(indicatorKey))) {
+      indicators.push({
+        key: indicatorKey as SupportedIndicators,
+        indicatorParams: indicatorParams as IndicatorsParams,
+        lineParams: indicatorsLinesParams.value[indicatorKey],
+      });
+    }
+  }
+
+  return indicators;
+});
 
 provide(IndicatorsListKey, {
   indicators: readonly(indicators.value),
-  addIndicator,
-  removeIndicator,
+  indicatorsLinesParams: indicatorsLinesParams,
 });
 </script>
 

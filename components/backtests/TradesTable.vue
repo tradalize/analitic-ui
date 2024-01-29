@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import DateColumn from "@/components/UI/DateColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
-// import TradeDetails from "./TradeDetails.vue";
 import type { AnaliticTrade } from "@/server/types";
-import { TradeDetailsModalKey } from "./TradeDetails/types";
+import { TradeDetailsModalKey } from "./TradeDetails/interface";
 
 defineProps<{
   trades: AnaliticTrade[];
