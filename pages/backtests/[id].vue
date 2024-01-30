@@ -3,6 +3,10 @@ import BacktestDetails from "@/components/backtests/BacktestDetails.vue";
 
 const route = useRoute();
 
+definePageMeta({
+  name: "Backtest",
+});
+
 useHead({
   title: `Details for backtest #${route.params.id}`,
 });
