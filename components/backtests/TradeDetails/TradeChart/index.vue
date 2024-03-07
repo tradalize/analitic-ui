@@ -39,24 +39,26 @@ const chartContainer = ref();
 
 const getbuyMarker = (
   time: UTCTimestamp,
-  price: number
+  price: number,
+  comment: string = ""
 ): SeriesMarker<UTCTimestamp> => ({
   time,
   position: "belowBar",
   color: "#2196F3",
   shape: "arrowUp",
-  text: `Buy @ ${price}`,
+  text: `Buy @ ${price} \n${comment}`,
 });
 
 const getSellMarker = (
   time: UTCTimestamp,
-  price: number
+  price: number,
+  comment: string = ""
 ): SeriesMarker<UTCTimestamp> => ({
   time,
   position: "aboveBar",
   color: "#e91e63",
   shape: "arrowDown",
-  text: `Sell @ ${price}`,
+  text: `Sell @ ${price} \n${comment}`,
 });
 
 let chart: IChartApi;
@@ -121,7 +123,8 @@ onMounted(async () => {
     candlestickSeries.setMarkers([
       getbuyMarker(
         (props.trade.openTime / 1000) as UTCTimestamp,
-        props.trade.openPrice
+        props.trade.openPrice,
+        props.trade.comment
       ),
       getSellMarker(
         (props.trade.closeTime / 1000) as UTCTimestamp,
@@ -132,7 +135,8 @@ onMounted(async () => {
     candlestickSeries.setMarkers([
       getSellMarker(
         (props.trade.openTime / 1000) as UTCTimestamp,
-        props.trade.openPrice
+        props.trade.openPrice,
+        props.trade.comment
       ),
       getbuyMarker(
         (props.trade.closeTime / 1000) as UTCTimestamp,

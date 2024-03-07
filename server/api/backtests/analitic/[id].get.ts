@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
     ...rest,
     trades: trades
       .filter((t) => t.closeTime)
+      .sort((a, b) => a.openTime - b.openTime)
       .map((t) => ({ ...t, pnl: calcTradePnl(t) } as AnaliticTrade)),
     summary: getTradesSummary(backtest?.trades as Position[]),
   };
