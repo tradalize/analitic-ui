@@ -9,6 +9,7 @@
             title="Compare backtests"
             :to="{ name: 'Compare backtests' }"
           />
+          <v-list-item title="Correlations" :to="{ name: 'Correlations' }" />
         </v-list>
       </v-navigation-drawer>
 
