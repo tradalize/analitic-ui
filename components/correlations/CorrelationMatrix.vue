@@ -38,7 +38,16 @@ const perspectivePairs = computed<CorrelationPair[]>(() => {
   <v-container>
     <v-row>
       <v-col v-for="(pair, index) in perspectivePairs" :key="index" cols="2">
-        <v-card density="compact" class="text-center">
+        <v-card
+          density="compact"
+          class="text-center"
+          :to="{
+            name: 'Correlation pair',
+            params: {
+              pair: [pair.asset1, pair.asset2],
+            },
+          }"
+        >
           <div class="pa-4">{{ pair.asset1 }} / {{ pair.asset2 }}</div>
 
           <div class="pa-4 text-h6">{{ pair.correlationScore.toFixed(2) }}</div>

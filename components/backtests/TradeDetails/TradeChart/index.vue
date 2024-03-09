@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  onUnmounted,
-  onBeforeUpdate,
-  getCurrentInstance,
-} from "vue";
+import { ref, onMounted, onUnmounted, getCurrentInstance } from "vue";
 import { POSITION_DIRECTION } from "@tradalize/core";
 import {
   type SeriesMarker,
@@ -26,8 +20,6 @@ const props = defineProps<{
   trade: AnaliticTrade;
   indicators?: IndicatorRecord[];
 }>();
-
-console.log(props.indicators);
 
 const { candles, pending } = await useBinanceFuturesChartData({
   symbol: props.trade.symbol,

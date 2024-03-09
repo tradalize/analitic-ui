@@ -34,7 +34,7 @@ export async function useBinanceFuturesChartData({
   limit = 1500,
 }: Params) {
   const { data, pending } = await useFetch<RawKline[]>("/fapi/v1/klines", {
-    cache: "force-cache",
+    cache: "default",
     baseURL: BINANCE_FUTURES_API_HOST,
     query: {
       symbol,
