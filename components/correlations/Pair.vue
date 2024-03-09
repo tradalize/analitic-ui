@@ -5,8 +5,10 @@ import CorrelationChart from "./CorrelationChart.vue";
 
 const props = defineProps<{ asset1: string; asset2: string }>();
 
+const retentionDays = ref(30);
+const interval = ref("1h");
+
 const startTime = subDays(new Date(), 60).getTime();
-const interval = "1h";
 
 const { data: candlesAsset1, pending: pendingAsset1 } = useFetch(
   "/api/exchange/binance/futures/klines",
@@ -76,6 +78,17 @@ const relativeValues = computed(() => {
 <template>
   <v-card :loading="pendingAsset1 || pendingAsset2">
     <v-card-title> Correlation: {{ asset1 }} | {{ asset2 }} </v-card-title>
+
+    <v-card-subtitle>
+      <v-row>
+        <v-col>
+          <v-text-field label="Retenrion days" v-model="retentionDays" />
+        </v-col>
+        <v-col>
+          <v-select label="interval" v-model="interval" :items="['1h']" />
+        </v-col>
+      </v-row>
+    </v-card-subtitle>
 
     <v-card-text v-if="relativeValues.asset1SeriesData?.length > 0">
       <CorrelationChart
