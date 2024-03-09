@@ -2,7 +2,6 @@
 import { subDays } from "date-fns";
 import type { LineData } from "lightweight-charts";
 import CorrelationChart from "./CorrelationChart.vue";
-import ZScoreChart from "./ZScoreChart.vue";
 
 const props = defineProps<{ asset1: string; asset2: string }>();
 
@@ -84,8 +83,8 @@ const relativeValues = computed(() => {
         :asset1="relativeValues.asset1SeriesData"
         :asset2-title="props.asset2"
         :asset2="relativeValues.asset2SeriesData"
+        :spreads="relativeValues.spreads"
       />
-      <ZScoreChart :spreads="relativeValues.spreads" />
     </v-card-text>
   </v-card>
 </template>
