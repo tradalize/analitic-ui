@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { subDays } from "date-fns";
 import type { LineData } from "lightweight-charts";
 import CorrelationChart from "./CorrelationChart.vue";
 import { useStorage } from "@vueuse/core";
 
 type CorrData = {
-  corr: {
+  corrScores: {
     correlationScore: number;
     std: number;
     spread: number;
@@ -24,10 +23,6 @@ const props = defineProps<{ asset1: string; asset2: string }>();
 const retentionDays = useStorage("correlation-retention", 30);
 const interval = useStorage("correlation-interval", "1h");
 
-// const startTime = computed(() =>
-//   subDays(new Date(), retentionDays.value).getTime()
-// );
-
 const { data: corrData, pending } = useFetch<CorrData>(
   `/corr-chart/${props.asset1}/${props.asset2}`,
   {
@@ -38,7 +33,11 @@ const { data: corrData, pending } = useFetch<CorrData>(
 
 <template>
   <v-card :loading="pending">
-    <v-card-title> Correlation: {{ asset1 }} | {{ asset2 }} </v-card-title>
+    <v-card-title>
+      {{ asset1 }} / {{ asset2 }} | score
+      {{ Number(corrData?.corrScores?.correlationScore).toFixed(2) }} | std
+      {{ Number(corrData?.corrScores?.std).toFixed(2) }}
+    </v-card-title>
 
     <v-card-subtitle>
       <v-row>
