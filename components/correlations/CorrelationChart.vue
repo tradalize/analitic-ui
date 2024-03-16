@@ -12,14 +12,14 @@ import {
   type ChartOptions,
   type DeepPartial,
 } from "lightweight-charts";
-import { std as standardDeviation } from "mathjs";
 
 const props = defineProps<{
   asset1Title: string;
   asset1: LineData[];
   asset2Title: string;
   asset2: LineData[];
-  spreads: LineData[];
+  spread: LineData[];
+  zScore: LineData[];
 }>();
 
 const defaultChartOptions: DeepPartial<ChartOptions> = {
@@ -47,15 +47,6 @@ const defaultChartOptions: DeepPartial<ChartOptions> = {
 
 const correlationChartContainer = ref();
 const zScoreChartContainer = ref();
-
-const zScoreData = computed<LineData[]>(() => {
-  const std = standardDeviation(props.spreads.map(({ value }) => value));
-
-  return props.spreads.map(({ time, value }) => ({
-    time,
-    value: Math.abs(value / (std as unknown as number)),
-  }));
-});
 
 let priceActionsChart: IChartApi;
 let zScoreChart: IChartApi;
@@ -89,22 +80,28 @@ onMounted(async () => {
 
   const asset1Series = priceActionsChart.addLineSeries({
     title: props.asset1Title,
-    color: "#006702",
+    color: "#1c8d00",
   });
   const asset2Series = priceActionsChart.addLineSeries({
     title: props.asset2Title,
-    color: "#dd4f00",
+    color: "#c34e0a",
+  });
+  const spreadSeries = priceActionsChart.addLineSeries({
+    title: "Spread",
+    color: "#ffffff",
+    lineWidth: 1,
   });
 
   asset1Series.setData(props.asset1);
   asset2Series.setData(props.asset2);
+  spreadSeries.setData(props.spread);
 
   const zScoreSeries = zScoreChart.addLineSeries({
     title: "Z-Score",
     lineWidth: 1,
   });
 
-  zScoreSeries.setData(zScoreData.value);
+  zScoreSeries.setData(props.zScore);
 
   // Syncing 2 charts
   priceActionsChart
