@@ -12,19 +12,27 @@ import {
 } from "lightweight-charts";
 import type { AnaliticTrade } from "@/server/types";
 import { useBinanceFuturesChartData } from "@/composables/useBinanceFuturesChartData";
+import { useFXOpenChartData } from "@/composables/useFXOpenChartData";
 import { getTimeframeInterval } from "@/utils/getTimeframeInterval";
 import { SUPPORTED_INDICATORS, addBollingerBands, addEma } from "./indicators";
 import type { IndicatorRecord } from "./indicators/types";
+import { subHours } from "date-fns";
 
 const props = defineProps<{
   trade: AnaliticTrade;
   indicators?: IndicatorRecord[];
 }>();
 
-const { candles, pending } = await useBinanceFuturesChartData({
+// const { candles, pending } = await useBinanceFuturesChartData({
+//   symbol: props.trade.symbol,
+//   interval: props.trade.timeframe,
+//   ...getTimeframeInterval(props.trade),
+// });
+
+const { candles, pending } = await useFXOpenChartData({
   symbol: props.trade.symbol,
-  interval: props.trade.timeframe,
-  ...getTimeframeInterval(props.trade),
+  timeframe: props.trade.timeframe,
+  startTime: subHours(props.trade.openTime, 5).getTime(),
 });
 
 const chartContainer = ref();
