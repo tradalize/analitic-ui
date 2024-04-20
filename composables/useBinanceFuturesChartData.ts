@@ -22,7 +22,7 @@ type Params = {
   symbol: string;
   startTime: number;
   endTime?: number;
-  interval: Timeframe;
+  timeframe: Timeframe;
   limit?: number;
 };
 
@@ -30,7 +30,7 @@ export async function useBinanceFuturesChartData({
   symbol,
   startTime,
   endTime = Date.now(),
-  interval,
+  timeframe: interval,
   limit = 1500,
 }: Params) {
   const { data, pending } = await useFetch<RawKline[]>("/fapi/v1/klines", {

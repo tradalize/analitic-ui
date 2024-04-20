@@ -2,40 +2,43 @@
 import type { AnaliticTrade } from "@/server/types";
 import DateColumn from "@/components/UI/DateColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
+import SummaryItem from "@/components/UI/SummaryItem.vue";
 
 defineProps<AnaliticTrade>();
 </script>
 
 <template>
   <v-row class="mb-4">
-    <v-col cols="3">
-      <b>Open time:</b><br />
+    <SummaryItem title="Open time:">
       <date-column :date="openTime" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Close time:</b><br />
+    <SummaryItem title="Open price:">
+      {{ openPrice }}
+    </SummaryItem>
+
+    <SummaryItem title="Close time:">
       <date-column :date="closeTime" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>PnL:</b><br />
+    <SummaryItem title="Close price:">
+      {{ closePrice }}
+    </SummaryItem>
+
+    <SummaryItem title="PnL:">
       <PercentColumn :number="pnl" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>PnL in points:</b><br />
+    <SummaryItem title="PnL in points:">
       {{ (Number(closePrice) - openPrice) * direction }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>SL:</b><br />
+    <SummaryItem title="SL:">
       {{ sl }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>TP:</b><br />
+    <SummaryItem title="TP:">
       {{ tp }}
-    </v-col>
+    </SummaryItem>
   </v-row>
 </template>

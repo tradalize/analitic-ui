@@ -21,8 +21,8 @@ const BBFormComp = defineAsyncComponent(
 </script>
 
 <template>
-  <v-row class="mb-4 indicators-row">
-    <v-col v-for="indicator in indicators" cols="4">
+  <v-row>
+    <v-col v-for="indicator in indicators" cols="12" md="6" lg="3">
       <EMAFormComp
         v-if="RegExp(SUPPORTED_INDICATORS.ema).test(indicator.key)"
         v-bind="(indicator.indicatorParams as EMAParams)"
@@ -37,15 +37,3 @@ const BBFormComp = defineAsyncComponent(
     </v-col>
   </v-row>
 </template>
-
-<style>
-.indicators-row {
-  position: relative;
-}
-
-#indicators-menu-opener {
-  position: absolute;
-  right: -1.5rem;
-  top: -1.5rem;
-}
-</style>

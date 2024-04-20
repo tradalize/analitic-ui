@@ -18,7 +18,7 @@ export function getTimeframeInterval(trade: AnaliticTrade) {
     case "5m":
       return {
         startTime: subHours(new Date(trade.openTime), 6).getTime(),
-        endTime: addHours(new Date(trade.closeTime), 6).getTime(),
+        endTime: addHours(new Date(trade.closeTime), 1).getTime(),
       };
 
     default:

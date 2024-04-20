@@ -26,17 +26,13 @@ export async function useFXOpenChartData({
   const fxOPenTimeframe = timeframesMap.get(timeframe) ?? timeframe;
 
   const { data, pending } = await useFetch<{ Bars: RawKline[] }>(
-    `api/v2/quotehistory/${symbol}/${fxOPenTimeframe}/bars/ask`,
+    `/api/v2/public/quotehistory/${symbol}/${fxOPenTimeframe}/bars/ask`,
     {
       cache: "default",
       baseURL: FX_OPEN_API_HOST,
       query: {
         timestamp: startTime,
-        count: 300,
-      },
-      headers: {
-        Authorization:
-          "Basic 333be997-0bd5-4c30-98a0-1aadc17a6adf:DM445HnYZGmrPqqg:bGEWkWberQ7z5cMyQggKhKn7MSTW4DEp4dASrCqN2eb7s7mc83DmsFSAsGgCbqkY",
+        count: 200,
       },
       default: () => ({ Bars: [] }),
     }

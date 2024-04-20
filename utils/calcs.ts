@@ -9,3 +9,13 @@ export function calcTradePnl(trade: Trade) {
     ((trade.closePrice - trade.openPrice) / trade.openPrice) * trade.direction
   );
 }
+
+export function decimalCount(number: number | string) {
+  const numberAsString = String(number);
+
+  if (numberAsString.includes(".")) {
+    return numberAsString.split(".")[1].length;
+  }
+
+  return 0;
+}

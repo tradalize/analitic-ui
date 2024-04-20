@@ -11,31 +11,24 @@ import {
   type IChartApi,
 } from "lightweight-charts";
 import type { AnaliticTrade } from "@/server/types";
-import { useBinanceFuturesChartData } from "@/composables/useBinanceFuturesChartData";
-import { useFXOpenChartData } from "@/composables/useFXOpenChartData";
-import { getTimeframeInterval } from "@/utils/getTimeframeInterval";
+import { useChartData } from "@/composables/useChartData";
 import { SUPPORTED_INDICATORS, addBollingerBands, addEma } from "./indicators";
 import type { IndicatorRecord } from "./indicators/types";
-import { subHours } from "date-fns";
+import { decimalCount } from "~/utils/calcs";
 
 const props = defineProps<{
   trade: AnaliticTrade;
   indicators?: IndicatorRecord[];
 }>();
 
-// const { candles, pending } = await useBinanceFuturesChartData({
-//   symbol: props.trade.symbol,
-//   interval: props.trade.timeframe,
-//   ...getTimeframeInterval(props.trade),
-// });
-
-const { candles, pending } = await useFXOpenChartData({
+const { candles, pending } = await useChartData({
   symbol: props.trade.symbol,
   timeframe: props.trade.timeframe,
-  startTime: subHours(props.trade.openTime, 5).getTime(),
+  ...getTimeframeInterval(props.trade),
 });
 
 const chartContainer = ref();
+const decimalsCount = decimalCount(props.trade.openPrice);
 
 const getbuyMarker = (
   time: UTCTimestamp,
@@ -81,6 +74,12 @@ onMounted(async () => {
     },
     crosshair: {
       mode: CrosshairMode.Normal,
+    },
+    timeScale: {
+      timeVisible: true,
+    },
+    localization: {
+      priceFormatter: (price: number) => price.toFixed(decimalsCount),
     },
   });
 
@@ -181,6 +180,7 @@ onUnmounted(() => {
 
 <style scoped>
 #chartContainer {
-  min-height: 800px;
+  min-height: 600px;
+  margin: 0 2rem;
 }
 </style>

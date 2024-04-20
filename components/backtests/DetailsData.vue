@@ -1,44 +1,38 @@
 <script setup lang="ts">
 import type { TradesSummary } from "@tradalize/core";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
+import SummaryItem from "@/components/UI/SummaryItem.vue";
 
 defineProps<TradesSummary>();
 </script>
 
 <template>
   <v-row>
-    <v-col cols="3">
-      <b>Average win</b><br />
+    <SummaryItem title="Average win:">
       <PercentColumn :number="averageWin" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Average loss</b><br />
+    <SummaryItem title="Average loss:">
       <PercentColumn :number="averageLoss" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Max gain</b><br />
+    <SummaryItem title="Max gain:">
       <PercentColumn :number="maxGain" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Max loss</b><br />
+    <SummaryItem title="Max loss:">
       <PercentColumn :number="maxLoss" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Winrate</b><br />
+    <SummaryItem title="Winrate:">
       <PercentColumn :number="winrate" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Profit factor</b><br />
+    <SummaryItem title="Profit factor:">
       {{ profitFactor }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Cumulative PnL</b><br />
+    <SummaryItem title="Cumulative PnL:">
       ${{ cumulativePnl.toFixed(2) }}
       <v-tooltip text="Tooltip">
         <template v-slot:activator="{ props }">
@@ -48,36 +42,30 @@ defineProps<TradesSummary>();
         </template>
         Simulated starting balance $1000
       </v-tooltip>
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Profit result</b><br />
+    <SummaryItem title="Profit result:">
       <PercentColumn :number="profitResult" />
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Trades count</b><br />
+    <SummaryItem title="Trades count:">
       {{ tradesCount }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Wins count</b><br />
+    <SummaryItem title="Wins count:">
       {{ winsCount }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Longs count</b><br />
+    <SummaryItem title="Longs count:">
       {{ longsCount }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Shorts count</b><br />
+    <SummaryItem title="Shorts count:">
       {{ shortsCount }}
-    </v-col>
+    </SummaryItem>
 
-    <v-col cols="3">
-      <b>Average time in trade</b><br />
+    <SummaryItem title="Average time in trade:">
       {{ averageTimeInTradeLabel }}
-    </v-col>
+    </SummaryItem>
   </v-row>
 </template>

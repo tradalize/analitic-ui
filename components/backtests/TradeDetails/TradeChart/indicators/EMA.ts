@@ -1,4 +1,3 @@
-import type { LineSeriesPartialOptions } from "lightweight-charts";
 import { EMA } from "@debut/indicators";
 import type { IndicatorProps } from "./types";
 
