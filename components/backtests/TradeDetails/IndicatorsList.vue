@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import {
-  SUPPORTED_INDICATORS,
-  type BollingerBandsParams,
-  type EMAParams,
-} from "./TradeChart/indicators";
+import { SUPPORTED_INDICATORS } from "./TradeChart/indicators";
+import type { BollingerBandsParams, EMAParams } from "./TradeChart/indicators";
 import { IndicatorsListKey } from "./interface";
 
 const { indicators, indicatorsLinesParams } = inject(IndicatorsListKey, {
