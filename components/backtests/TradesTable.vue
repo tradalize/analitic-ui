@@ -51,7 +51,12 @@ const headers = [
 </script>
 
 <template>
-  <v-data-table :headers="headers" :items="trades" items-per-page="20">
+  <v-data-table
+    :headers="headers"
+    :items="trades"
+    items-per-page="20"
+    :sort-by="[{ key: 'openTime', order: 'desc' }]"
+  >
     <template v-slot:item.openTime="{ item }">
       <DateColumn :date="item.openTime" />
     </template>

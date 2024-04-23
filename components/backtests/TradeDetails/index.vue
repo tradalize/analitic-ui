@@ -80,11 +80,18 @@ provide(IndicatorsListKey, {
 </script>
 
 <template>
-  <v-dialog v-model="isOpen">
+  <v-dialog v-model="isOpen" fullscreen transition="dialog-bottom-transition">
     <v-card v-if="trade">
-      <v-card-title>
+      <v-card-title class="d-flex">
         Trade {{ trade.id }} {{ trade.symbol }} {{ trade.timeframe }}
         <DirectionColumn :direction="trade.direction" />
+
+        <v-btn
+          icon="mdi-close"
+          class="ml-auto"
+          @click="isOpen = false"
+          variant="plain"
+        />
       </v-card-title>
 
       <v-container>
