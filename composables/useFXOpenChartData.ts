@@ -15,12 +15,14 @@ type RawKline = {
 type Params = {
   symbol: string;
   startTime: number;
+  endTime?: number;
   timeframe: Timeframe;
 };
 
 export async function useFXOpenChartData({
   symbol,
   startTime,
+  endTime,
   timeframe,
 }: Params) {
   const fxOPenTimeframe = timeframesMap.get(timeframe) ?? timeframe;
@@ -32,7 +34,7 @@ export async function useFXOpenChartData({
       baseURL: FX_OPEN_API_HOST,
       query: {
         timestamp: startTime,
-        count: 200,
+        count: getCount({ timeframe, startTime, endTime }),
       },
       default: () => ({ Bars: [] }),
     }
@@ -63,3 +65,25 @@ function rawKlineToCandlestick({
 const timeframesMap = new Map<Timeframe, string>([
   [TIMEFRAME.FiveMinutes, "M5"],
 ]);
+
+const timeframeDurationsMap = new Map<Timeframe, number>([
+  [TIMEFRAME.FiveMinutes, 5 * 60 * 1000],
+]);
+
+function getCount({
+  timeframe,
+  startTime,
+  endTime,
+}: {
+  timeframe: Timeframe;
+  startTime: number;
+  endTime?: number;
+}) {
+  const timeframeDuration = timeframeDurationsMap.get(timeframe);
+
+  if (!endTime || !timeframeDuration) {
+    return 100;
+  }
+
+  return Math.floor((endTime - startTime) / timeframeDuration);
+}

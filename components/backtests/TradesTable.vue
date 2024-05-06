@@ -54,8 +54,9 @@ const headers = [
   <v-data-table
     :headers="headers"
     :items="trades"
-    items-per-page="20"
     :sort-by="[{ key: 'openTime', order: 'desc' }]"
+    items-per-page="20"
+    hover
   >
     <template v-slot:item.openTime="{ item }">
       <DateColumn :date="item.openTime" />

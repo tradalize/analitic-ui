@@ -4,6 +4,7 @@ import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
+import type { AnaliticBacktest } from "@/server/api/backtests/analitic/[id].get";
 
 type Props = {
   backtestId: string;
@@ -11,7 +12,7 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const { data: backtestAnalitic, pending } = await useFetch(
+const { data: backtestAnalitic, pending } = await useFetch<AnaliticBacktest>(
   `/api/backtests/analitic/${props.backtestId}`
 );
 

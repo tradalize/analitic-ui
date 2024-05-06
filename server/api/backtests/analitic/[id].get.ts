@@ -1,8 +1,13 @@
-import { Position, getTradesSummary } from "@tradalize/core";
+import { Position, TradesSummary, getTradesSummary } from "@tradalize/core";
 import type { Trade, Backtest } from "@tradalize/drizzle-adapter/dist/pg";
 import { getBacktest } from "@tradalize/drizzle-adapter/dist/pg/index.js";
 import type { AnaliticTrade } from "@/server/types";
 import { calcTradePnl } from "@/utils/calcs";
+
+export type AnaliticBacktest = Backtest & {
+  trades: AnaliticTrade[];
+  summary: TradesSummary;
+};
 
 export default defineEventHandler(async (event) => {
   const { dbUrl } = useRuntimeConfig(event);
@@ -22,5 +27,5 @@ export default defineEventHandler(async (event) => {
       .sort((a, b) => a.openTime - b.openTime)
       .map((t) => ({ ...t, pnl: calcTradePnl(t) } as AnaliticTrade)),
     summary: getTradesSummary(backtest?.trades as Position[]),
-  };
+  } as AnaliticBacktest;
 });

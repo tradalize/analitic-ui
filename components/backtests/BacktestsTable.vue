@@ -1,7 +1,9 @@
 <script setup lang="ts">
-const { data: backtests, refresh: refreshBacktests } = await useFetch(
-  "/api/backtests"
-);
+import type { Backtest } from "@tradalize/drizzle-adapter/dist/pg";
+
+const { data: backtests, refresh: refreshBacktests } = await useFetch<
+  Backtest[]
+>("/api/backtests");
 
 const deleteId = ref<number>();
 const { execute: deleteBacktest, status: deleteStatus } = useFetch(

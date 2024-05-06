@@ -5,11 +5,16 @@ import {
   ColorType,
   LineStyle,
   type UTCTimestamp,
+  type MouseEventHandler,
+  type Time,
 } from "lightweight-charts";
 import type { AnaliticTrade } from "@/server/types";
+import { TradeDetailsModalKey } from "./TradeDetails/interface";
 
 const props = defineProps<{ trades: AnaliticTrade[] }>();
 const chartContainer = ref();
+
+const modalApi = inject(TradeDetailsModalKey);
 
 const pnls = computed(() => {
   let balance = 1000;
@@ -26,8 +31,21 @@ const pnls = computed(() => {
   });
 });
 
+const chartClickHandler: MouseEventHandler<Time> = ({ seriesData }) => {
+  const time = seriesData.values().next().value.time as UTCTimestamp;
+
+  const targetTrade = props.trades.find(
+    ({ openTime }) => openTime === time * 1000
+  );
+
+  if (targetTrade) {
+    modalApi?.openModal(targetTrade);
+  }
+};
+
 onMounted(() => {
   const chart = createChart(chartContainer.value, {
+    autoSize: true,
     layout: {
       textColor: "white",
       background: { type: ColorType.Solid, color: "black" },
@@ -56,6 +74,8 @@ onMounted(() => {
   });
 
   baselineSeries.setData(pnls.value);
+
+  chart.subscribeClick(chartClickHandler);
 });
 </script>
 

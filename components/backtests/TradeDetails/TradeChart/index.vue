@@ -58,6 +58,7 @@ let chart: IChartApi;
 
 onMounted(async () => {
   chart = createChart(chartContainer.value, {
+    autoSize: true,
     layout: {
       textColor: "white",
       background: { type: ColorType.Solid, color: "black" },
@@ -180,7 +181,7 @@ onUnmounted(() => {
 
 <style scoped>
 #chartContainer {
-  min-height: 600px;
-  margin: 0 2rem;
+  min-height: 650px;
+  margin: 0 1.5rem;
 }
 </style>

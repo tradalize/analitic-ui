@@ -39,7 +39,7 @@ export async function useChartData({
     }
 
     case "fx-open": {
-      return useFXOpenChartData({ symbol, timeframe, startTime });
+      return useFXOpenChartData({ symbol, timeframe, startTime, endTime });
     }
 
     default:
