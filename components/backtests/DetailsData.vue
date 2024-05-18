@@ -4,6 +4,16 @@ import PercentColumn from "@/components/UI/PercentColumn.vue";
 import SummaryItem from "@/components/UI/SummaryItem.vue";
 
 defineProps<TradesSummary>();
+
+function roundToTwoSignificantDigits(value: number): number {
+  if (value === 0) return 0;
+
+  const absValue = Math.abs(value);
+  const digitCount = Math.floor(Math.log10(absValue)) + 1;
+  const factor = Math.pow(10, 2 - digitCount);
+
+  return Math.round(value * factor) / factor;
+}
 </script>
 
 <template>
@@ -32,15 +42,28 @@ defineProps<TradesSummary>();
       {{ profitFactor }}
     </SummaryItem>
 
+    <SummaryItem title="Expectancy:">
+      <v-tooltip text="Expected profit result per trade">
+        <template v-slot:activator="{ props }">
+          <span v-bind="props">
+            {{ roundToTwoSignificantDigits(expectancy) }}%
+          </span>
+        </template>
+      </v-tooltip>
+    </SummaryItem>
+
+    <SummaryItem title="Average time in trade:">
+      {{ averageTimeInTradeLabel }}
+    </SummaryItem>
+
     <SummaryItem title="Cumulative PnL:">
       ${{ cumulativePnl.toFixed(2) }}
-      <v-tooltip text="Tooltip">
+      <v-tooltip text="Simulated starting balance $1000">
         <template v-slot:activator="{ props }">
           <v-icon v-bind="props" color="grey-lighten-1">
             mdi-information-symbol
           </v-icon>
         </template>
-        Simulated starting balance $1000
       </v-tooltip>
     </SummaryItem>
 
@@ -62,10 +85,6 @@ defineProps<TradesSummary>();
 
     <SummaryItem title="Shorts count:">
       {{ shortsCount }}
-    </SummaryItem>
-
-    <SummaryItem title="Average time in trade:">
-      {{ averageTimeInTradeLabel }}
     </SummaryItem>
   </v-row>
 </template>
