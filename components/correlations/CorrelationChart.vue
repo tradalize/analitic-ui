@@ -43,6 +43,7 @@ const defaultChartOptions: DeepPartial<ChartOptions> = {
   timeScale: {
     timeVisible: true,
   },
+  autoSize: true,
 };
 
 const correlationChartContainer = ref();

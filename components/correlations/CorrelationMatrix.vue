@@ -7,7 +7,7 @@ type CorrelationPair = {
   correlationScore: number;
 };
 
-const CORRELATION_TRASHOLD = 0.8;
+const CORRELATION_TRASHOLD = 0.9;
 
 const props = defineProps<{ matrix: CorrelationMatrix }>();
 
@@ -50,7 +50,7 @@ const perspectivePairs = computed<CorrelationPair[]>(() => {
         >
           <div class="pa-4">{{ pair.asset1 }} / {{ pair.asset2 }}</div>
 
-          <div class="pa-4 text-h6">{{ pair.correlationScore.toFixed(2) }}</div>
+          <div class="pa-4 text-h6">{{ pair.correlationScore }}</div>
         </v-card>
       </v-col>
     </v-row>
