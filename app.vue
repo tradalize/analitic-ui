@@ -1,5 +1,24 @@
+<script setup lang="ts">
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+</script>
+
 <template>
-  <v-app>
+  <header class="border-b">
+    <div class="container mx-auto">
+      <NavigationMenu class="py-2">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NuxtLink :to="{ name: 'Home' }">
+              <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                Home
+              </NavigationMenuLink>
+            </NuxtLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  </header>
+  <!-- <v-app>
     <v-layout>
       <v-navigation-drawer>
         <v-list nav>
@@ -19,5 +38,5 @@
         </div>
       </v-main>
     </v-layout>
-  </v-app>
+  </v-app> -->
 </template>
