@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import type { Backtest } from "@tradalize/drizzle-adapter/dist/pg";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 const { data: backtests, refresh: refreshBacktests } = await useFetch<
   Backtest[]
@@ -22,40 +31,38 @@ const deleteHandler = (id: number) => {
 </script>
 
 <template>
-  <v-table hover>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Strategy name</th>
-        <th>Symbol</th>
-        <th>Timeframe</th>
-        <th></th>
-      </tr>
-    </thead>
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>ID</TableHead>
+        <TableHead>Strategy name</TableHead>
+        <TableHead>Symbol</TableHead>
+        <TableHead>Timeframe</TableHead>
+        <TableHead></TableHead>
+      </TableRow>
+    </TableHeader>
 
-    <tbody>
-      <tr v-for="backtest in backtests" :key="backtest.id">
-        <td>{{ backtest.id }}</td>
-        <td>{{ backtest.strategyName }}</td>
-        <td>{{ backtest.strategyParams?.symbol }}</td>
-        <td>{{ backtest.strategyParams?.timeframe }}</td>
-        <td>
-          <div class="d-flex" :style="{ gap: '1rem' }">
-            <v-btn variant="tonal" :to="`/backtests/${backtest.id}`">
-              Open
-            </v-btn>
+    <TableBody>
+      <TableRow v-for="backtest in backtests" :key="backtest.id">
+        <TableCell>{{ backtest.id }}</TableCell>
+        <TableCell>{{ backtest.strategyName }}</TableCell>
+        <TableCell>{{ backtest.strategyParams?.symbol }}</TableCell>
+        <TableCell>{{ backtest.strategyParams?.timeframe }}</TableCell>
+        <TableCell>
+          <div class="flex gap-4 justify-center">
+            <Button size="sm" :to="`/backtests/${backtest.id}`"> Open </Button>
 
-            <v-btn
-              variant="tonal"
-              color="error"
+            <Button
+              variant="destructive"
+              size="sm"
               :loading="deleteStatus === 'pending'"
               @click="deleteHandler(backtest.id)"
             >
               Delete
-            </v-btn>
+            </Button>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
 </template>

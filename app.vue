@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+
+const navItems = [
+  {
+    to: { name: "Home" },
+    label: "Home",
+  },
+  {
+    to: { name: "Backtests" },
+    label: "Backtests",
+  },
+];
 </script>
 
 <template>
@@ -7,10 +18,10 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
     <div class="container mx-auto">
       <NavigationMenu class="py-2">
         <NavigationMenuList>
-          <NavigationMenuItem>
-            <NuxtLink :to="{ name: 'Home' }">
+          <NavigationMenuItem v-for="{ to, label } in navItems">
+            <NuxtLink :to>
               <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-                Home
+                {{ label }}
               </NavigationMenuLink>
             </NuxtLink>
           </NavigationMenuItem>
@@ -18,25 +29,8 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
       </NavigationMenu>
     </div>
   </header>
-  <!-- <v-app>
-    <v-layout>
-      <v-navigation-drawer>
-        <v-list nav>
-          <v-list-item title="Home" :to="{ name: 'Home' }" exact />
-          <v-list-item title="Backtests" :to="{ name: 'Backtests' }" />
-          <v-list-item
-            title="Compare backtests"
-            :to="{ name: 'Compare backtests' }"
-          />
-          <v-list-item title="Correlations" :to="{ name: 'Correlations' }" />
-        </v-list>
-      </v-navigation-drawer>
 
-      <v-main>
-        <div class="pa-4 overflow-y-auto h-screen">
-          <nuxt-page />
-        </div>
-      </v-main>
-    </v-layout>
-  </v-app> -->
+  <main class="container mx-auto py-4">
+    <nuxt-page />
+  </main>
 </template>
