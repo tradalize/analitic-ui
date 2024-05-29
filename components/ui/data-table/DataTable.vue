@@ -25,7 +25,7 @@ import DataTablePagination from "./DataTablePagination.vue";
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  pagination?: PaginationState;
+  pagination?: Partial<PaginationState>;
 }>();
 
 const sorting = ref<SortingState>([]);

@@ -1,4 +1,13 @@
 <script setup lang="ts">
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticTrade } from "@/server/types";
@@ -80,21 +89,19 @@ provide(IndicatorsListKey, {
 </script>
 
 <template>
-  <v-dialog v-model="isOpen" fullscreen transition="dialog-bottom-transition">
-    <v-card v-if="trade">
-      <v-card-title class="d-flex">
-        Trade {{ trade.id }} {{ trade.symbol }} {{ trade.timeframe }}
-        <DirectionColumn :direction="trade.direction" />
+  <Dialog v-model:open="isOpen">
+    <DialogContent
+      v-if="trade"
+      class="max-w-screen-2xl max-h-[90dvh] flex flex-col"
+    >
+      <DialogHeader>
+        <DialogTitle>
+          Trade {{ trade.id }} {{ trade.symbol }} {{ trade.timeframe }}
+          <DirectionColumn :direction="trade.direction" />
+        </DialogTitle>
+      </DialogHeader>
 
-        <v-btn
-          icon="mdi-close"
-          class="ml-auto"
-          @click="isOpen = false"
-          variant="plain"
-        />
-      </v-card-title>
-
-      <v-container>
+      <div class="overflow-y-auto">
         <Summary v-bind="trade" />
 
         <IndicatorsList />
@@ -104,8 +111,8 @@ provide(IndicatorsListKey, {
           :strategy-params="strategyParams"
           :indicators="indicators"
         />
-      </v-container>
-    </v-card>
-  </v-dialog>
+      </div>
+    </DialogContent>
+  </Dialog>
   <slot />
 </template>

@@ -8,17 +8,19 @@ defineProps<AnaliticTrade>();
 </script>
 
 <template>
-  <v-row class="mb-4">
+  <div
+    class="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-4 xl:grid-cols-8 md:grid-cols-6 mb-4"
+  >
     <SummaryItem title="Open time:">
       <date-column :date="openTime" />
     </SummaryItem>
 
-    <SummaryItem title="Open price:">
-      {{ openPrice }}
-    </SummaryItem>
-
     <SummaryItem title="Close time:">
       <date-column :date="closeTime" />
+    </SummaryItem>
+
+    <SummaryItem title="Open price:">
+      {{ openPrice }}
     </SummaryItem>
 
     <SummaryItem title="Close price:">
@@ -40,5 +42,5 @@ defineProps<AnaliticTrade>();
     <SummaryItem title="TP:">
       {{ tp }}
     </SummaryItem>
-  </v-row>
+  </div>
 </template>

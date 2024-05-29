@@ -66,11 +66,21 @@ const columns: ColumnDef<AnaliticTrade>[] = [
   {
     accessorKey: "actions",
     header: "",
-    cell: () =>
+    cell: ({ row }) =>
       h(
         "div",
         { class: "flex justify-center" },
-        h(Button, { size: "sm" }, () => "Open details")
+        h(
+          Button,
+          {
+            size: "sm",
+            variant: "secondary",
+            onClick() {
+              modalApi?.openModal(row.original);
+            },
+          },
+          () => "Open details"
+        )
       ),
   },
 ];

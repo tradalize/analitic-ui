@@ -175,13 +175,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-skeleton-loader v-if="pending" type="card"></v-skeleton-loader>
-  <div v-else id="chartContainer" ref="chartContainer"></div>
+  <div v-if="!pending" id="chartContainer" ref="chartContainer"></div>
 </template>
 
 <style scoped>
 #chartContainer {
-  min-height: 650px;
+  min-height: 600px;
   margin: 0 1.5rem;
 }
 </style>

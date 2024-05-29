@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { EMAParams } from "./EMA";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 defineProps<EMAParams>();
 
@@ -14,33 +17,17 @@ const lineParams = defineModel("lineParams", {
 </script>
 
 <template>
-  <h6 class="text-h6 mb-2">EMA {{ period }}</h6>
+  <div class="flex flex-col gap-4">
+    <h6 class="font-bold mb-2">EMA {{ period }}</h6>
 
-  <v-text-field
-    label="Period"
-    class="flex-1-1-100"
-    :model-value="period"
-    disabled
-    density="compact"
-  />
+    <Input label="Period" :model-value="period" disabled />
 
-  <v-text-field
-    label="Line width"
-    density="compact"
-    v-model="lineParams.lineWidth"
-  />
+    <Input label="Line width" v-model="lineParams.lineWidth" />
 
-  <v-switch v-model="showColors" label="Show colors" hide-details />
-
-  <v-color-picker
-    v-if="showColors"
-    hide-sliders
-    hide-canvas
-    hide-inputs
-    show-swatches
-    mode="hex"
-    elevation="0"
-    swatches-max-height="140"
-    v-model="lineParams.color"
-  />
+    <div class="flex items-center gap-2">
+      <Switch v-model:checked="showColors" />
+      <Label>Show colors</Label>
+      <input v-if="showColors" type="color" v-model="lineParams.color" />
+    </div>
+  </div>
 </template>

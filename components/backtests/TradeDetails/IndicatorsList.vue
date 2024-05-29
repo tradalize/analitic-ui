@@ -18,8 +18,8 @@ const BBFormComp = defineAsyncComponent(
 </script>
 
 <template>
-  <v-row>
-    <v-col v-for="indicator in indicators" cols="12" md="6" lg="3">
+  <div class="grid sm:grid-cols-2 md:grid-cols-4 sm:gap-2 md:gap-4 mb-4">
+    <template v-for="indicator in indicators">
       <EMAFormComp
         v-if="RegExp(SUPPORTED_INDICATORS.ema).test(indicator.key)"
         v-bind="(indicator.indicatorParams as EMAParams)"
@@ -31,6 +31,6 @@ const BBFormComp = defineAsyncComponent(
         v-bind="(indicator.indicatorParams as BollingerBandsParams)"
         v-model:line-params="indicatorsLinesParams[indicator.key]"
       />
-    </v-col>
-  </v-row>
+    </template>
+  </div>
 </template>
