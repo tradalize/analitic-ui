@@ -10,6 +10,10 @@ const navItems = [
     to: { name: "Backtests" },
     label: "Backtests",
   },
+  {
+    to: { name: "Compare backtests" },
+    label: "Compare backtests",
+  },
 ];
 </script>
 

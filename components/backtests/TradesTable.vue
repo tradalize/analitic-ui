@@ -8,7 +8,6 @@ import { TradeDetailsModalKey } from "./TradeDetails/interface";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import type { ColumnDef } from "@tanstack/vue-table";
-import { ArrowUpIcon, ArrowDownIcon } from "@radix-icons/vue";
 
 defineProps<{
   trades: AnaliticTrade[];
@@ -18,12 +17,15 @@ const modalApi = inject(TradeDetailsModalKey);
 
 const columns: ColumnDef<AnaliticTrade>[] = [
   {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
     accessorKey: "openTime",
     header: "Open time",
     cell: ({ cell }) =>
       h(DateColumn, { date: cell.getValue<AnaliticTrade["openTime"]>() }),
     enableSorting: true,
-    sortDescFirst: true,
   },
   {
     accessorKey: "closeTime",
@@ -61,7 +63,6 @@ const columns: ColumnDef<AnaliticTrade>[] = [
     cell: ({ cell }) =>
       h(PercentColumn, { number: cell.getValue<AnaliticTrade["pnl"]>() }),
     enableSorting: true,
-    sortDescFirst: true,
   },
   {
     accessorKey: "actions",
@@ -87,5 +88,10 @@ const columns: ColumnDef<AnaliticTrade>[] = [
 </script>
 
 <template>
-  <DataTable :columns="columns" :data="trades" :pagination="{ pageSize: 10 }" />
+  <DataTable
+    :columns="columns"
+    :data="trades"
+    :pagination="{ pageSize: 10 }"
+    :default-sorting="[{ id: 'openTime', desc: true }]"
+  />
 </template>

@@ -26,9 +26,10 @@ const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pagination?: Partial<PaginationState>;
+  defaultSorting?: SortingState;
 }>();
 
-const sorting = ref<SortingState>([]);
+const sorting = ref<SortingState>(props.defaultSorting ?? []);
 
 const table = useVueTable({
   get data() {

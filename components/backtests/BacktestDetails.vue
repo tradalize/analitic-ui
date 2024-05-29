@@ -3,14 +3,7 @@ import TradeDetails from "./TradeDetails/index.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticBacktest } from "@/server/api/backtests/analitic/[id].get";
 

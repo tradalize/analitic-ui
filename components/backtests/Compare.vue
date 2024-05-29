@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { NuxtLink } from "#components";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
+import { ReloadIcon } from "@radix-icons/vue";
 import { refDebounced } from "@vueuse/core";
+import type { ColumnDef } from "@tanstack/vue-table";
+import type { TradesSummary } from "@tradalize/core";
+import { Button } from "@/components/ui/button";
+import { MagnifyingGlassIcon } from "@radix-icons/vue";
 
 const strategyNameInput = ref();
 const symbolInput = ref();
@@ -23,177 +29,133 @@ const {
   default: () => [],
 });
 
-const tableHeaders = [
+const columns: ColumnDef<TradesSummary>[] = [
   {
-    title: "ID",
-    key: "id",
+    accessorKey: "id",
+    header: "ID",
   },
   {
-    title: "Strategy params",
-    key: "strategyParams",
+    accessorKey: "strategyParams",
+    header: "Strategy params",
+    cell: ({ getValue }) => {
+      const value = getValue<{ symbol: string; timeframe: string }>();
+      return `${value.symbol} ${value.timeframe}`;
+    },
   },
   {
-    title: "Max gain",
-    key: "maxGain",
+    accessorKey: "maxGain",
+    header: "Max gain",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Max loss",
-    key: "maxLoss",
+    accessorKey: "maxLoss",
+    header: "Max loss",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Average win",
-    key: "averageWin",
+    accessorKey: "averageWin",
+    header: "Average win",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Average loss",
-    key: "averageLoss",
+    accessorKey: "averageLoss",
+    header: "Average loss",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Winrate",
-    key: "winrate",
+    accessorKey: "winrate",
+    header: "Winrate",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Profit factor",
-    key: "profitFactor",
+    accessorKey: "profitFactor",
+    header: "Profit factor",
   },
   {
-    title: "Cum, %",
-    key: "profitResult",
+    accessorKey: "profitResult",
+    header: "Cum, %",
+    cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
   },
   {
-    title: "Cum, $",
-    key: "cumulativePnl",
+    accessorKey: "cumulativePnl",
+    header: "Cum, $",
+    cell: ({ getValue }) => `$${getValue<number>().toFixed(2)}`,
   },
   {
-    title: "Trades count",
-    key: "tradesCount",
+    accessorKey: "tradesCount",
+    header: "Trades count",
   },
   {
-    title: "Wins count",
-    key: "winsCount",
+    accessorKey: "winsCount",
+    header: "Wins count",
   },
   {
-    title: "Longs count",
-    key: "longsCount",
+    accessorKey: "longsCount",
+    header: "Longs count",
   },
   {
-    title: "Shorts count",
-    key: "shortsCount",
+    accessorKey: "shortsCount",
+    header: "Shorts count",
   },
   {
-    title: "Average time in trade",
-    key: "averageTimeInTradeLabel",
+    accessorKey: "averageTimeInTradeLabel",
+    header: "Average time in trade",
   },
   {
-    key: "actions",
+    accessorKey: "actions",
+    header: "",
+    cell: ({ row }) =>
+      h(
+        NuxtLink,
+        {
+          to: {
+            name: "Backtest",
+            params: { id: row.getValue<number>("id") },
+          },
+        },
+        h(MagnifyingGlassIcon)
+      ),
   },
 ];
 </script>
 
 <template>
-  <v-card>
-    <v-card-title primary-title>
-      <v-container>
-        <v-row>
-          <v-col>
-            <v-text-field
-              name="strategy-name"
-              v-model="strategyNameInput"
-              label="Strategy"
-              density="compact"
-            />
-          </v-col>
-          <v-col>
-            <v-text-field
-              name="symbol"
-              v-model="symbolInput"
-              label="Symbol"
-              density="compact"
-            />
-          </v-col>
-          <v-col>
-            <v-text-field
-              name="timeframe"
-              v-model="timeframeInput"
-              label="Timeframe"
-              density="compact"
-            />
-          </v-col>
-          <v-col cols="1" class="d-flex justify-center align-center">
-            <v-btn @click="refresh" icon="mdi-refresh" />
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-title>
-
-    <v-card-text>
-      <v-data-table
-        :headers="tableHeaders"
-        :items="tableItems"
-        items-per-page="25"
-        density="compact"
-        :loading="status === 'pending'"
-        multi-sort
-        hover
+  <Card>
+    <CardHeader class="flex-row gap-4 items-center">
+      <Input
+        class="flex-grow"
+        id="strategy-name"
+        v-model="strategyNameInput"
+        label="Strategy"
+      />
+      <Input
+        class="flex-grow"
+        id="symbol"
+        v-model="symbolInput"
+        label="Symbol"
+      />
+      <Input
+        class="flex-grow"
+        id="timeframe"
+        v-model="timeframeInput"
+        label="Timeframe"
+      />
+      <Button
+        @click="refresh"
+        variant="secondary"
+        size="sm"
+        class="relative top-3"
       >
-        <template v-slot:item.strategyParams="{ item }">
-          <v-tooltip>
-            <template #activator="{ props }">
-              <span :style="{ whiteSpace: 'nowrap' }" v-bind="props">
-                {{ item.strategyParams?.symbol }} |
-                {{ item.strategyParams?.timeframe }}
-              </span>
-            </template>
-            <pre>{{ JSON.stringify(item.strategyParams, null, 2) }}</pre>
-          </v-tooltip>
-        </template>
+        <ReloadIcon />
+      </Button>
+    </CardHeader>
 
-        <template v-slot:item.maxGain="{ item }">
-          <PercentColumn :number="item.maxGain" />
-        </template>
-
-        <template v-slot:item.maxLoss="{ item }">
-          <PercentColumn :number="item.maxLoss" />
-        </template>
-
-        <template v-slot:item.averageWin="{ item }">
-          <PercentColumn :number="item.averageWin" />
-        </template>
-
-        <template v-slot:item.averageLoss="{ item }">
-          <PercentColumn :number="item.averageLoss" />
-        </template>
-
-        <template v-slot:item.winrate="{ item }">
-          <PercentColumn :number="item.winrate" />
-        </template>
-
-        <template v-slot:item.profitResult="{ item }">
-          <PercentColumn :number="item.profitResult" />
-        </template>
-
-        <template v-slot:item.cumulativePnl="{ item }">
-          ${{ item.cumulativePnl.toFixed(2) }}
-        </template>
-
-        <template v-slot:item.actions="{ item }">
-          <div class="d-flex" style="gap: 0.5rem">
-            <v-btn
-              density="compact"
-              icon="mdi-magnify-expand"
-              :to="{ name: 'Backtest', params: { id: item.id } }"
-            />
-
-            <!-- <v-btn
-            variant="tonal"
-            density="compact"
-            icon="mdi-delete"
-            color="error"
-            @click="deleteHandler(item.id)"
-          ></v-btn> -->
-          </div>
-        </template>
-      </v-data-table>
-    </v-card-text>
-  </v-card>
+    <CardContent>
+      <DataTable
+        :columns="columns"
+        :data="tableItems"
+        :loading="status === 'pending'"
+      />
+    </CardContent>
+  </Card>
 </template>
