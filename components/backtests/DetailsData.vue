@@ -17,7 +17,7 @@ function roundToTwoSignificantDigits(value: number): number {
 </script>
 
 <template>
-  <v-row>
+  <div class="grid gap-2 grid-cols-2 md:grid-cols-4 xl:grid-cols-6">
     <SummaryItem title="Average win:">
       <PercentColumn :number="averageWin" />
     </SummaryItem>
@@ -43,13 +43,9 @@ function roundToTwoSignificantDigits(value: number): number {
     </SummaryItem>
 
     <SummaryItem title="Expectancy:">
-      <v-tooltip text="Expected profit result per trade">
-        <template v-slot:activator="{ props }">
-          <span v-bind="props">
-            {{ roundToTwoSignificantDigits(expectancy) }}%
-          </span>
-        </template>
-      </v-tooltip>
+      <div title="Expected profit result per trade">
+        {{ roundToTwoSignificantDigits(expectancy) }}%
+      </div>
     </SummaryItem>
 
     <SummaryItem title="Average time in trade:">
@@ -57,14 +53,9 @@ function roundToTwoSignificantDigits(value: number): number {
     </SummaryItem>
 
     <SummaryItem title="Cumulative PnL:">
-      ${{ cumulativePnl.toFixed(2) }}
-      <v-tooltip text="Simulated starting balance $1000">
-        <template v-slot:activator="{ props }">
-          <v-icon v-bind="props" color="grey-lighten-1">
-            mdi-information-symbol
-          </v-icon>
-        </template>
-      </v-tooltip>
+      <div title="Simulated starting balance $1000">
+        ${{ cumulativePnl.toFixed(2) }}
+      </div>
     </SummaryItem>
 
     <SummaryItem title="Profit result:">
@@ -86,5 +77,5 @@ function roundToTwoSignificantDigits(value: number): number {
     <SummaryItem title="Shorts count:">
       {{ shortsCount }}
     </SummaryItem>
-  </v-row>
+  </div>
 </template>

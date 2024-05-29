@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { h } from "vue";
 import DateColumn from "@/components/UI/DateColumn.vue";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
 import type { AnaliticTrade } from "@/server/types";
 import { TradeDetailsModalKey } from "./TradeDetails/interface";
+import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button";
+import type { ColumnDef } from "@tanstack/vue-table";
+import { ArrowUpIcon, ArrowDownIcon } from "@radix-icons/vue";
 
 defineProps<{
   trades: AnaliticTrade[];
@@ -11,73 +16,66 @@ defineProps<{
 
 const modalApi = inject(TradeDetailsModalKey);
 
-const headers = [
+const columns: ColumnDef<AnaliticTrade>[] = [
   {
-    key: "openTime",
-    title: "Open time",
+    accessorKey: "openTime",
+    header: "Open time",
+    cell: ({ cell }) =>
+      h(DateColumn, { date: cell.getValue<AnaliticTrade["openTime"]>() }),
+    enableSorting: true,
+    sortDescFirst: true,
   },
   {
-    key: "closeTime",
-    title: "Close time",
+    accessorKey: "closeTime",
+    header: "Close time",
+    cell: ({ cell }) =>
+      h(DateColumn, { date: cell.getValue<AnaliticTrade["closeTime"]>() }),
   },
   {
-    key: "direction",
-    title: "Direction",
+    accessorKey: "direction",
+    header: "Direction",
+    cell: ({ cell }) =>
+      h(DirectionColumn, {
+        direction: cell.getValue<AnaliticTrade["direction"]>(),
+      }),
   },
   {
-    key: "openPrice",
-    title: "Open price",
+    accessorKey: "openPrice",
+    header: "Open price",
   },
   {
-    key: "closePrice",
-    title: "Close price",
+    accessorKey: "closePrice",
+    header: "Close price",
   },
   {
-    key: "sl",
-    title: "Stop loss",
+    accessorKey: "sl",
+    header: "Stop loss",
   },
   {
-    key: "tp",
-    title: "Take profit",
+    accessorKey: "tp",
+    header: "Take profit",
   },
   {
-    key: "pnl",
-    title: "PnL",
+    accessorKey: "pnl",
+    header: "PnL",
+    cell: ({ cell }) =>
+      h(PercentColumn, { number: cell.getValue<AnaliticTrade["pnl"]>() }),
+    enableSorting: true,
+    sortDescFirst: true,
   },
   {
-    key: "actions",
+    accessorKey: "actions",
+    header: "",
+    cell: () =>
+      h(
+        "div",
+        { class: "flex justify-center" },
+        h(Button, { size: "sm" }, () => "Open details")
+      ),
   },
 ];
 </script>
 
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="trades"
-    :sort-by="[{ key: 'openTime', order: 'desc' }]"
-    items-per-page="20"
-    hover
-  >
-    <template v-slot:item.openTime="{ item }">
-      <DateColumn :date="item.openTime" />
-    </template>
-
-    <template v-slot:item.closeTime="{ item }">
-      <DateColumn :date="item.closeTime" />
-    </template>
-
-    <template v-slot:item.direction="{ item }">
-      <DirectionColumn :direction="item.direction" />
-    </template>
-
-    <template v-slot:item.pnl="{ item }">
-      <PercentColumn :number="item.pnl" />
-    </template>
-
-    <template v-slot:item.actions="{ item }">
-      <v-btn variant="tonal" @click="() => modalApi?.openModal(item)"
-        >Open details</v-btn
-      >
-    </template>
-  </v-data-table>
+  <DataTable :columns="columns" :data="trades" :pagination="{ pageSize: 10 }" />
 </template>

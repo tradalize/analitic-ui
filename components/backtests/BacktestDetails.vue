@@ -3,6 +3,14 @@ import TradeDetails from "./TradeDetails/index.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticBacktest } from "@/server/api/backtests/analitic/[id].get";
 
@@ -12,7 +20,7 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const { data: backtestAnalitic, pending } = await useFetch<AnaliticBacktest>(
+const { data: backtestAnalitic } = await useFetch<AnaliticBacktest>(
   `/api/backtests/analitic/${props.backtestId}`
 );
 
@@ -28,13 +36,13 @@ const title = computed(() => {
 </script>
 
 <template>
-  <v-skeleton-loader v-if="pending" type="card" />
-  <v-card v-else>
-    <v-card-title primary-title
-      >{{ backtestAnalitic?.strategyName }} ID: {{ backtestId }}
-      {{ title }}</v-card-title
-    >
-    <v-container>
+  <Card>
+    <CardHeader>
+      <CardTitle>
+        {{ backtestAnalitic?.strategyName }} ID: {{ backtestId }} {{ title }}
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
       <DetailsData
         v-if="backtestAnalitic?.summary"
         v-bind="backtestAnalitic.summary"
@@ -48,6 +56,6 @@ const title = computed(() => {
 
         <TradesTable :trades="backtestAnalitic.trades" />
       </TradeDetails>
-    </v-container>
-  </v-card>
+    </CardContent>
+  </Card>
 </template>

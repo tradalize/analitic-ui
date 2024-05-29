@@ -80,12 +80,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="chartContainer" ref="chartContainer" />
+  <div id="chartContainer" ref="chartContainer" class="my-6" />
 </template>
 
 <style scoped>
 #chartContainer {
   min-height: 500px;
-  margin: 1rem 0;
 }
 </style>
