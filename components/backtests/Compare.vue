@@ -46,60 +46,73 @@ const columns: ColumnDef<TradesSummary>[] = [
     accessorKey: "maxGain",
     header: "Max gain",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "maxLoss",
     header: "Max loss",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "averageWin",
     header: "Average win",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "averageLoss",
     header: "Average loss",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "winrate",
     header: "Winrate",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "profitFactor",
     header: "Profit factor",
+    enableSorting: true,
   },
   {
     accessorKey: "profitResult",
     header: "Cum, %",
     cell: ({ getValue }) => h(PercentColumn, { number: getValue<number>() }),
+    enableSorting: true,
   },
   {
     accessorKey: "cumulativePnl",
     header: "Cum, $",
     cell: ({ getValue }) => `$${getValue<number>().toFixed(2)}`,
+    enableSorting: true,
   },
   {
     accessorKey: "tradesCount",
     header: "Trades count",
+    enableSorting: true,
   },
   {
     accessorKey: "winsCount",
     header: "Wins count",
+    enableSorting: true,
   },
   {
     accessorKey: "longsCount",
     header: "Longs count",
+    enableSorting: true,
   },
   {
     accessorKey: "shortsCount",
     header: "Shorts count",
+    enableSorting: true,
   },
   {
     accessorKey: "averageTimeInTradeLabel",
     header: "Average time in trade",
+    enableSorting: true,
   },
   {
     accessorKey: "actions",
