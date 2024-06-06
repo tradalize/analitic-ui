@@ -2,11 +2,8 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";

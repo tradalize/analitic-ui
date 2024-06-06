@@ -3,6 +3,7 @@ import TradeDetails from "./TradeDetails/index.vue";
 import EquityCurve from "./EquityCurve.vue";
 import TradesTable from "./TradesTable.vue";
 import DetailsData from "./DetailsData.vue";
+import TimeDistribution from "./TimeDistribution/index.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticBacktest } from "@/server/api/backtests/analitic/[id].get";
@@ -31,8 +32,9 @@ const title = computed(() => {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>
+      <CardTitle class="flex items-center justify-between">
         {{ backtestAnalitic?.strategyName }} ID: {{ backtestId }} {{ title }}
+        <TimeDistribution :trades="backtestAnalitic?.trades" />
       </CardTitle>
     </CardHeader>
     <CardContent>
