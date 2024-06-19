@@ -1,27 +1,37 @@
 import { getDbClient } from "@tradalize/drizzle-adapter/dist/pg/index.js";
-import type { Backtest, DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
+import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import { getTradesSummary, Position } from "@tradalize/core";
+
+type QueryParams = {
+  strategyName?: string;
+  symbol?: string;
+  timeframe?: string;
+};
 
 export default defineEventHandler(async (event) => {
   const { dbUrl } = useRuntimeConfig(event);
-  const query = getQuery(event);
+  const { strategyName, symbol, timeframe } = getQuery<QueryParams>(event);
 
   const { db } = getDbClient(dbUrl);
 
   const backtests = await db.query.backtests.findMany({
     with: {
-      trades: {
-        where: (trade, { isNotNull }) => isNotNull(trade.closePrice),
-      },
+      trades: true,
     },
-    where: (bt, { like, and }) => {
-      const params = Object.entries(query)
-        .map(([key, value]) => {
-          if (!!value && typeof value === "string") {
-            return like(bt[key as keyof Backtest], value);
-          }
-        })
-        .filter(Boolean);
+    where: (bt, { like, and, sql }) => {
+      const params = [];
+
+      if (strategyName) {
+        params.push(like(bt.strategyName, strategyName));
+      }
+
+      if (symbol) {
+        params.push(sql`${bt.strategyParams}->'symbol' = ${symbol}`);
+      }
+
+      if (timeframe) {
+        params.push(sql`${bt.strategyParams}->'timeframe' = ${timeframe}`);
+      }
 
       return and(...params);
     },

@@ -1,7 +1,13 @@
-import { TIMEFRAME, type Timeframe } from "@tradalize/core";
+import {
+  TIMEFRAME,
+  type Timeframe,
+  FX_TIMEFRAME,
+  type FxTimeframe,
+} from "@tradalize/core";
 import type { OhlcData, UTCTimestamp } from "lightweight-charts";
 
-const FX_OPEN_API_HOST = "https://ttlivewebapi.fxopen.net:8443";
+// const FX_OPEN_API_HOST = "https://ttlivewebapi.fxopen.net:8443";
+const FX_OPEN_API_HOST = "https://ttdemowebapi.fxopen.net:8443";
 
 type RawKline = {
   Volume: number;
@@ -25,10 +31,8 @@ export async function useFXOpenChartData({
   endTime,
   timeframe,
 }: Params) {
-  const fxOPenTimeframe = timeframesMap.get(timeframe) ?? timeframe;
-
   const { data, pending } = await useFetch<{ Bars: RawKline[] }>(
-    `/api/v2/public/quotehistory/${symbol}/${fxOPenTimeframe}/bars/ask`,
+    `/api/v2/public/quotehistory/${symbol}/${timeframesMap[timeframe]}/bars/ask`,
     {
       cache: "default",
       baseURL: FX_OPEN_API_HOST,
@@ -62,9 +66,15 @@ function rawKlineToCandlestick({
   };
 }
 
-const timeframesMap = new Map<Timeframe, string>([
-  [TIMEFRAME.FiveMinutes, "M5"],
-]);
+const timeframesMap = Object.entries(TIMEFRAME).reduce((acc, [key, value]) => {
+  acc[value] = FX_TIMEFRAME[key as keyof typeof FX_TIMEFRAME];
+
+  return acc;
+}, {} as Record<Timeframe, FxTimeframe>);
+
+// const timeframesMap = new Map<Timeframe, string>([
+//   [TIMEFRAME.FiveMinutes, "M5"],
+// ]);
 
 const timeframeDurationsMap = new Map<Timeframe, number>([
   [TIMEFRAME.FiveMinutes, 5 * 60 * 1000],

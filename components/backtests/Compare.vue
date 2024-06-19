@@ -39,7 +39,11 @@ const columns: ColumnDef<TradesSummary>[] = [
     header: "Strategy params",
     cell: ({ getValue }) => {
       const value = getValue<{ symbol: string; timeframe: string }>();
-      return `${value.symbol} ${value.timeframe}`;
+      return h(
+        "span",
+        { title: JSON.stringify(value, null, 2) },
+        `${value.symbol} ${value.timeframe}`
+      );
     },
   },
   {
@@ -168,6 +172,7 @@ const columns: ColumnDef<TradesSummary>[] = [
         :columns="columns"
         :data="tableItems"
         :loading="status === 'pending'"
+        :pagination="{ pageSize: 20 }"
       />
     </CardContent>
   </Card>
