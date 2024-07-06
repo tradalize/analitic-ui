@@ -1,56 +1,79 @@
 <script setup lang="ts">
-import type { LineData } from "lightweight-charts";
 import CorrelationChart from "./CorrelationChart.vue";
-import { useStorage } from "@vueuse/core";
-
-type CorrData = {
-  corrScores: {
-    correlationScore: number;
-    std: number;
-    spread: number;
-    zScore: number;
-  };
-  data: {
-    asset1: LineData[];
-    asset2: LineData[];
-    spread: LineData[];
-    zScore: LineData[];
-  };
-};
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import type { DateRange } from "radix-vue";
+import { DateRangePicker } from "@/components/ui/date-picker";
+import { Label } from "@/components/ui/label";
+import { ReloadIcon } from "@radix-icons/vue";
+import type { Timeframe } from "@tradalize/core";
 
 const props = defineProps<{ asset1: string; asset2: string }>();
 
-const retentionDays = useStorage("correlation-retention", 30);
-const interval = useStorage("correlation-interval", "1h");
+const timeframe = ref<Timeframe>("1h");
+const range = ref({}) as Ref<DateRange>;
 
-const { data: corrData, pending } = useFetch<CorrData>(
-  `/corr-chart/${props.asset1}/${props.asset2}`,
+const start = computed(() => range.value?.start?.toDate("UTC").getTime());
+const end = computed(() => range.value?.end?.toDate("UTC").getTime());
+
+const { data: corrData, refresh } = useFetch(
+  "/api/arbitrage/correlation-chart",
   {
-    baseURL: "http://localhost:8000",
+    method: "post",
+    body: {
+      symbol1: props.asset1,
+      symbol2: props.asset2,
+      timeframe,
+      start,
+      end,
+    },
   }
 );
 </script>
 
 <template>
-  <v-card :loading="pending">
-    <v-card-title>
-      {{ asset1 }} / {{ asset2 }} | score
-      {{ Number(corrData?.corrScores?.correlationScore).toFixed(2) }} | std
-      {{ Number(corrData?.corrScores?.std).toFixed(2) }}
-    </v-card-title>
+  <Card>
+    <CardHeader>
+      <div class="flex gap-4">
+        <h1 class="text-lg font-bold mr-auto">
+          {{ asset1 }} / {{ asset2 }} | score
+          {{ Number(corrData?.corrScores?.correlationScore).toFixed(2) }} | std
+          {{ Number(corrData?.corrScores?.std).toFixed(2) }}
+        </h1>
 
-    <v-card-subtitle>
-      <v-row>
-        <v-col>
-          <v-text-field label="Retenrion days" v-model="retentionDays" />
-        </v-col>
-        <v-col>
-          <v-select label="interval" v-model="interval" :items="['1h']" />
-        </v-col>
-      </v-row>
-    </v-card-subtitle>
+        <div class="flex gap-2 items-center">
+          <Label>Timeframe</Label>
+          <Select v-model="timeframe">
+            <SelectTrigger>
+              <SelectValue placeholder="Select timeframe" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="1h"> 1h </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
 
-    <v-card-text v-if="corrData?.data?.asset1?.length">
+        <div class="flex items-center gap-2">
+          <Label>Date range</Label>
+          <DateRangePicker v-model="range" />
+        </div>
+
+        <Button variant="outline" size="icon" @click="refresh">
+          <ReloadIcon class="w-4 h-4" />
+        </Button>
+      </div>
+    </CardHeader>
+
+    <CardContent v-if="corrData?.data?.asset1?.length">
       <CorrelationChart
         :asset1-title="props.asset1"
         :asset1="corrData.data.asset1"
@@ -59,6 +82,6 @@ const { data: corrData, pending } = useFetch<CorrData>(
         :z-score="corrData.data.zScore"
         :spread="corrData.data.spread"
       />
-    </v-card-text>
-  </v-card>
+    </CardContent>
+  </Card>
 </template>

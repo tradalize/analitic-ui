@@ -51,6 +51,10 @@ const zScoreChartContainer = ref();
 
 let priceActionsChart: IChartApi;
 let zScoreChart: IChartApi;
+let asset1Series: ISeriesApi<"Line">;
+let asset2Series: ISeriesApi<"Line">;
+let spreadSeries: ISeriesApi<"Line">;
+let zScoreSeries: ISeriesApi<"Line">;
 
 function getCrosshairDataPoint(series: ISeriesApi<"Line", Time>, param: any) {
   if (!param.time) {
@@ -72,6 +76,13 @@ function syncCrosshair(
   chart.clearCrosshairPosition();
 }
 
+function setSeriesData() {
+  asset1Series.setData(props.asset1);
+  asset2Series.setData(props.asset2);
+  spreadSeries.setData(props.spread);
+  zScoreSeries.setData(props.zScore);
+}
+
 onMounted(async () => {
   priceActionsChart = createChart(
     correlationChartContainer.value,
@@ -79,30 +90,25 @@ onMounted(async () => {
   );
   zScoreChart = createChart(zScoreChartContainer.value, defaultChartOptions);
 
-  const asset1Series = priceActionsChart.addLineSeries({
+  asset1Series = priceActionsChart.addLineSeries({
     title: props.asset1Title,
     color: "#1c8d00",
   });
-  const asset2Series = priceActionsChart.addLineSeries({
+  asset2Series = priceActionsChart.addLineSeries({
     title: props.asset2Title,
     color: "#c34e0a",
   });
-  const spreadSeries = priceActionsChart.addLineSeries({
+  spreadSeries = priceActionsChart.addLineSeries({
     title: "Spread",
     color: "#ffffff",
     lineWidth: 1,
   });
-
-  asset1Series.setData(props.asset1);
-  asset2Series.setData(props.asset2);
-  spreadSeries.setData(props.spread);
-
-  const zScoreSeries = zScoreChart.addLineSeries({
+  zScoreSeries = zScoreChart.addLineSeries({
     title: "Z-Score",
     lineWidth: 1,
   });
 
-  zScoreSeries.setData(props.zScore);
+  setSeriesData();
 
   // Syncing 2 charts
   priceActionsChart
@@ -124,6 +130,10 @@ onMounted(async () => {
     const dataPoint = getCrosshairDataPoint(zScoreSeries, param);
     syncCrosshair(priceActionsChart, asset1Series, dataPoint);
   });
+});
+
+onUpdated(() => {
+  setSeriesData();
 });
 </script>
 
