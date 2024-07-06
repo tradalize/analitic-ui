@@ -14,6 +14,10 @@ const navItems = [
     to: { name: "Compare backtests" },
     label: "Compare backtests",
   },
+  {
+    to: { name: "Correlations" },
+    label: "Correlations",
+  },
 ];
 </script>
 

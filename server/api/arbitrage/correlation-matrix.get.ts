@@ -1,9 +1,9 @@
-type Matrix = Record<string, Record<string, number>>;
+import type { CorrelationItem } from "@/components/correlations/types";
 
 export default defineEventHandler(async (event) => {
   const { arbitrageApiUrl } = useRuntimeConfig(event);
 
-  return $fetch<Matrix>("/correlation-matrix", {
+  return $fetch<CorrelationItem[]>("/correlation-matrix", {
     baseURL: arbitrageApiUrl,
     cache: "force-cache",
   });

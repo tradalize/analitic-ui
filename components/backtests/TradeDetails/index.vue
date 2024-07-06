@@ -89,7 +89,7 @@ provide(IndicatorsListKey, {
   <Dialog v-model:open="isOpen">
     <DialogContent
       v-if="trade"
-      class="max-w-screen-2xl max-h-[90dvh] flex flex-col"
+      class="max-w-[95vw] max-h-[90dvh] flex flex-col"
     >
       <DialogHeader>
         <DialogTitle>

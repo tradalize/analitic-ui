@@ -180,7 +180,7 @@ onUnmounted(() => {
 
 <style scoped>
 #chartContainer {
-  min-height: 600px;
+  min-height: 700px;
   margin: 0 1.5rem;
 }
 </style>
