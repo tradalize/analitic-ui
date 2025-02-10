@@ -22,23 +22,25 @@ const navItems = [
 </script>
 
 <template>
-  <header class="border-b">
-    <div class="container mx-auto">
-      <NavigationMenu class="py-2">
-        <NavigationMenuList>
-          <NavigationMenuItem v-for="{ to, label } in navItems">
-            <NuxtLink :to>
-              <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-                {{ label }}
-              </NavigationMenuLink>
-            </NuxtLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    </div>
-  </header>
+  <UApp>
+    <header class="border-b">
+      <div class="container mx-auto">
+        <NavigationMenu class="py-2">
+          <NavigationMenuList>
+            <NavigationMenuItem v-for="{ to, label } in navItems">
+              <NuxtLink :to>
+                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                  {{ label }}
+                </NavigationMenuLink>
+              </NuxtLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+    </header>
 
-  <main class="container mx-auto py-4">
-    <nuxt-page />
-  </main>
+    <main class="container mx-auto py-4">
+      <nuxt-page />
+    </main>
+  </UApp>
 </template>
