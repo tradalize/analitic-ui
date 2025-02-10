@@ -81,6 +81,8 @@ function setSeriesData() {
   asset2Series.setData(props.asset2);
   spreadSeries.setData(props.spread);
   zScoreSeries.setData(props.zScore);
+
+  priceActionsChart.timeScale().fitContent();
 }
 
 onMounted(async () => {

@@ -9,7 +9,12 @@ defineProps<{ data: CorrelationItem[] }>();
 const columns: ColumnDef<CorrelationItem>[] = [
   { accessorKey: "symbol1", header: "Symbol 1" },
   { accessorKey: "symbol2", header: "Symbol 2" },
-  { accessorKey: "score", header: "Correlation score", enableSorting: true },
+  {
+    accessorKey: "score",
+    header: "Correlation score",
+    enableSorting: true,
+    cell: ({ cell }) => cell.getValue<number>()?.toFixed(2),
+  },
   {
     accessorKey: "actions",
     header: "",

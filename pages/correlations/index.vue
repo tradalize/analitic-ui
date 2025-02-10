@@ -10,18 +10,9 @@ useHead({
   title: "Correlations",
 });
 
-type CorrItem = {
-  symbol1: string;
-};
-
 const { data, status, refresh } = useFetch(
   "/api/arbitrage/correlation-matrix",
   {
-    cache: "force-cache",
-    key: "correlation-matrix",
-    getCachedData(key, nuxtApp) {
-      return nuxtApp.payload.data[key];
-    },
     default: () => [],
   }
 );
