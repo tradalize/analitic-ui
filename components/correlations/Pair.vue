@@ -1,24 +1,11 @@
 <script setup lang="ts">
 import CorrelationChart from "./CorrelationChart.vue";
-import { CalendarDate } from "@internationalized/date";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+  CalendarDate,
+  DateFormatter,
+  getLocalTimeZone,
+} from "@internationalized/date";
 import type { DateRange } from "radix-vue";
-import { DateRangePicker } from "@/components/ui/date-picker";
-import { Label } from "@/components/ui/label";
-import {
-  ReloadIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@radix-icons/vue";
 import type { Timeframe } from "@tradalize/core";
 import { subDays } from "date-fns";
 
@@ -26,10 +13,20 @@ const props = defineProps<{ asset1: string; asset2: string }>();
 
 const limit = ref<number>(90);
 
-const today = new Date("01 31 2025");
+const df = new DateFormatter("en-US", {
+  dateStyle: "medium",
+});
+
+const today = new Date();
+const dateModel = shallowRef(
+  new CalendarDate(today.getFullYear(), today.getMonth(), today.getDate())
+);
+
 const past = subDays(today, limit.value);
 
 const timeframe = ref<Timeframe>("1d");
+const timeframeItems = ["1d", "1h"];
+
 const range = ref<DateRange>({
   start: new CalendarDate(past.getFullYear(), past.getMonth(), past.getDate()),
   end: new CalendarDate(today.getFullYear(), today.getMonth(), today.getDate()),
@@ -53,71 +50,85 @@ const { data: corrData, refresh } = useFetch(
 );
 
 const handleBack = () => {
-  range.value = {
-    start: range.value.start?.subtract({ days: 1 }),
-    end: range.value.end?.subtract({ days: 1 }),
-  };
+  dateModel.value = dateModel.value?.subtract({ days: 1 });
 };
 
 const handleNext = () => {
-  range.value = {
-    start: range.value.start?.add({ days: 1 }),
-    end: range.value.end?.add({ days: 1 }),
-  };
+  dateModel.value = dateModel.value?.add({ days: 1 });
 };
 </script>
 
 <template>
-  <Card>
-    <CardHeader>
-      <div class="flex gap-4">
-        <h1 class="text-lg font-bold mr-auto">
-          {{ asset1 }} / {{ asset2 }} | score
-          {{ Number(corrData?.corrScores?.correlationScore).toFixed(2) }} | std
-          {{ Number(corrData?.corrScores?.std).toFixed(2) }}
-        </h1>
+  <div class="flex gap-4 h-full">
+    <div class="basis-3xs grow-0 flex flex-col gap-4">
+      <h2 class="text-xl font-bold">{{ asset1 }}-{{ asset2 }}</h2>
+      <h3 class="text-sm">
+        Correlation score:
+        <strong>{{
+          Number(corrData?.corrScores?.correlationScore).toFixed(2)
+        }}</strong>
+      </h3>
+      <h3 class="text-sm">
+        STD: <strong>{{ Number(corrData?.corrScores?.std).toFixed(2) }}</strong>
+      </h3>
 
-        <div class="flex gap-2 items-center">
-          <Label>Timeframe</Label>
-          <Select v-model="timeframe">
-            <SelectTrigger>
-              <SelectValue placeholder="Select timeframe" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="1d"> 1d </SelectItem>
-                <SelectItem value="1h"> 1h </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+      <UFormField label="Timeframe">
+        <USelect :items="timeframeItems" v-model="timeframe" class="w-full" />
+      </UFormField>
 
-        <div class="flex items-center gap-2">
-          <Label>Limit (number of candles)</Label>
-          <Input v-model="limit" />
-        </div>
+      <UFormField label="Limit (number of candles)">
+        <UInput v-model="limit" type="number" class="w-full" />
+      </UFormField>
 
-        <div class="flex items-center gap-2">
-          <Label>Date range</Label>
-          <DateRangePicker v-model="range" />
-        </div>
+      <UFormField label="Date">
+        <UPopover>
+          <UButton
+            color="neutral"
+            variant="subtle"
+            icon="i-radix-icons-calendar"
+            class="w-full justify-center"
+          >
+            {{
+              dateModel
+                ? df.format(dateModel.toDate(getLocalTimeZone()))
+                : "Select a date"
+            }}
+          </UButton>
 
-        <div class="flex items-center gap-1">
-          <Button variant="outline" size="icon" @click="handleBack">
-            <ChevronLeftIcon class="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="icon" @click="handleNext">
-            <ChevronRightIcon class="w-4 h-4" />
-          </Button>
-        </div>
+          <template #content>
+            <UCalendar v-model="dateModel" class="p-2" />
+          </template>
+        </UPopover>
+      </UFormField>
 
-        <Button variant="outline" size="icon" @click="refresh">
-          <ReloadIcon class="w-4 h-4" />
-        </Button>
+      <div class="flex items-center justify-center gap-1">
+        <UButton
+          icon="i-radix-icons-chevron-left"
+          variant="outline"
+          color="neutral"
+          @click="handleBack"
+        />
+
+        <UButton
+          icon="i-radix-icons-chevron-right"
+          variant="outline"
+          color="neutral"
+          @click="handleNext"
+        />
+
+        <UButton
+          icon="i-radix-icons-reload"
+          variant="outline"
+          color="neutral"
+          @click="() => refresh()"
+        />
       </div>
-    </CardHeader>
+    </div>
 
-    <CardContent v-if="corrData?.data?.asset1?.length">
+    <div
+      v-if="corrData?.data?.asset1?.length"
+      class="w-full overflow-y-auto max-h-[calc(100vh-4rem)]"
+    >
       <CorrelationChart
         :asset1-title="props.asset1"
         :asset1="corrData.data.asset1"
@@ -126,6 +137,6 @@ const handleNext = () => {
         :z-score="corrData.data.zScore"
         :spread="corrData.data.spread"
       />
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 </template>
