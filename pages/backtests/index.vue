@@ -11,7 +11,7 @@ useHead({
 </script>
 
 <template>
-  <UContainer>
+  <UContainer as="main" >
     <BacktestsTable />
   </UContainer>
 </template>

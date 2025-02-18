@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components";
+import type { TableColumn } from "@nuxt/ui";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
 import { ReloadIcon } from "@radix-icons/vue";
 import { refDebounced } from "@vueuse/core";
-import type { ColumnDef } from "@tanstack/vue-table";
 import type { TradesSummary } from "@tradalize/core";
 import { Button } from "@/components/ui/button";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
@@ -19,7 +19,7 @@ const {
   data: tableItems,
   refresh,
   status,
-} = useFetch("/api/backtests/analitic/compare", {
+} = useFetch<TradesSummary[]>("/api/backtests/analitic/compare", {
   query: {
     strategyName,
     symbol,
@@ -29,7 +29,7 @@ const {
   default: () => [],
 });
 
-const columns: ColumnDef<TradesSummary>[] = [
+const columns: TableColumn<TradesSummary>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -137,43 +137,30 @@ const columns: ColumnDef<TradesSummary>[] = [
 </script>
 
 <template>
-  <Card>
-    <CardHeader class="flex-row gap-4 items-center">
-      <Input
-        class="flex-grow"
-        id="strategy-name"
-        v-model="strategyNameInput"
-        label="Strategy"
-      />
-      <Input
-        class="flex-grow"
-        id="symbol"
-        v-model="symbolInput"
-        label="Symbol"
-      />
-      <Input
-        class="flex-grow"
-        id="timeframe"
-        v-model="timeframeInput"
-        label="Timeframe"
-      />
-      <Button
-        @click="refresh"
-        variant="secondary"
+  <UCard :ui="{ header: 'flex flex-row gap-4 items-center' }">
+    <template #header>
+      <UFormField label="Strategy" class="flex-grow">
+        <UInput class="w-full" id="strategy-name" v-model="strategyNameInput" />
+      </UFormField>
+      <UFormField label="Symbol" class="flex-grow">
+        <UInput class="w-full" id="symbol" v-model="symbolInput" />
+      </UFormField>
+      <UFormField label="Timeframe" class="flex-grow">
+        <UInput class="w-full" id="timeframe" v-model="timeframeInput" />
+      </UFormField>
+
+      <UButton
         size="sm"
         class="relative top-3"
-      >
-        <ReloadIcon />
-      </Button>
-    </CardHeader>
-
-    <CardContent>
-      <DataTable
-        :columns="columns"
-        :data="tableItems"
-        :loading="status === 'pending'"
-        :pagination="{ pageSize: 20 }"
+        icon="i-radix-icons-reload"
+        @click="() => refresh()"
       />
-    </CardContent>
-  </Card>
+    </template>
+
+    <UTable
+      :columns="columns"
+      :data="tableItems"
+      :loading="status === 'pending'"
+    />
+  </UCard>
 </template>
