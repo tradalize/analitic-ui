@@ -13,5 +13,7 @@ useHead({
 </script>
 
 <template>
-  <BacktestDetails :backtestId="(route.params.id as string)" />
+  <UContainer as="main">
+    <BacktestDetails :backtestId="(route.params.id as string)" />
+  </UContainer>
 </template>

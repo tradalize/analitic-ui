@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { h } from "vue";
 import DateColumn from "@/components/UI/DateColumn.vue";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import PercentColumn from "@/components/UI/PercentColumn.vue";
 import type { AnaliticTrade } from "@/server/types";
 import { TradeDetailsModalKey } from "./TradeDetails/interface";
-import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
 import type { ColumnDef } from "@tanstack/vue-table";
+import { UTable } from "#components";
 
 defineProps<{
   trades: AnaliticTrade[];
@@ -23,23 +21,15 @@ const columns: ColumnDef<AnaliticTrade>[] = [
   {
     accessorKey: "openTime",
     header: "Open time",
-    cell: ({ cell }) =>
-      h(DateColumn, { date: cell.getValue<AnaliticTrade["openTime"]>() }),
     enableSorting: true,
   },
   {
     accessorKey: "closeTime",
     header: "Close time",
-    cell: ({ cell }) =>
-      h(DateColumn, { date: cell.getValue<AnaliticTrade["closeTime"]>() }),
   },
   {
     accessorKey: "direction",
     header: "Direction",
-    cell: ({ cell }) =>
-      h(DirectionColumn, {
-        direction: cell.getValue<AnaliticTrade["direction"]>(),
-      }),
   },
   {
     accessorKey: "openPrice",
@@ -60,38 +50,44 @@ const columns: ColumnDef<AnaliticTrade>[] = [
   {
     accessorKey: "pnl",
     header: "PnL",
-    cell: ({ cell }) =>
-      h(PercentColumn, { number: cell.getValue<AnaliticTrade["pnl"]>() }),
     enableSorting: true,
   },
   {
-    accessorKey: "actions",
-    header: "",
-    cell: ({ row }) =>
-      h(
-        "div",
-        { class: "flex justify-center" },
-        h(
-          Button,
-          {
-            size: "sm",
-            variant: "secondary",
-            onClick() {
-              modalApi?.openModal(row.original);
-            },
-          },
-          () => "Open details"
-        )
-      ),
+    id: "action",
   },
 ];
 </script>
 
 <template>
-  <DataTable
+  <UTable
     :columns="columns"
     :data="trades"
-    :pagination="{ pageSize: 10 }"
     :default-sorting="[{ id: 'openTime', desc: true }]"
-  />
+  >
+    <template #pnl-openTime="{ row }">
+      <DateColumn :date="row.original.openTime" />
+    </template>
+
+    <template #pnl-closeTime="{ row }">
+      <DateColumn :date="row.original.closeTime" />
+    </template>
+
+    <template #pnl-direction="{ row }">
+      <DirectionColumn :direction="row.original.direction" />
+    </template>
+
+    <template #pnl-cell="{ row }">
+      <PercentColumn :number="row.original.pnl" />
+    </template>
+
+    <template #action-cell="{ row }">
+      <UButton
+        label="Open details"
+        size="sm"
+        color="neutral"
+        variant="ghost"
+        @click="modalApi?.openModal(row.original)"
+      />
+    </template>
+  </UTable>
 </template>

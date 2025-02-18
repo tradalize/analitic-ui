@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import type { NavigationMenuItem } from "@nuxt/ui";
 
-const navItems = [
+const navItems: NavigationMenuItem[] = [
   {
     to: { name: "Home" },
     label: "Home",
@@ -22,23 +22,11 @@ const navItems = [
 </script>
 
 <template>
-  <header class="border-b">
-    <div class="container mx-auto">
-      <NavigationMenu class="py-2">
-        <NavigationMenuList>
-          <NavigationMenuItem v-for="{ to, label } in navItems">
-            <NuxtLink :to>
-              <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-                {{ label }}
-              </NavigationMenuLink>
-            </NuxtLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    </div>
-  </header>
+  <UApp>
+    <UContainer as="header" class="mb-4">
+      <UNavigationMenu :items="navItems" color="neutral" variant="link" />
+    </UContainer>
 
-  <main class="container mx-auto py-4">
     <nuxt-page />
-  </main>
+  </UApp>
 </template>

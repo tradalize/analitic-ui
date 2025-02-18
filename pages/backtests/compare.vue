@@ -11,5 +11,7 @@ useHead({
 </script>
 
 <template>
-  <Compare />
+  <UContainer as="main">
+    <Compare />
+  </UContainer>
 </template>

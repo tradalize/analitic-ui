@@ -30,27 +30,26 @@ const title = computed(() => {
 </script>
 
 <template>
-  <Card>
-    <CardHeader>
-      <CardTitle class="flex items-center justify-between">
+  <UCard :ui="{ header: 'flex items-center justify-between' }">
+    <template #header>
+      <h3 class="text-xl font-bold">
         {{ backtestAnalitic?.strategyName }} ID: {{ backtestId }} {{ title }}
-        <TimeDistribution :trades="backtestAnalitic?.trades" />
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      <DetailsData
-        v-if="backtestAnalitic?.summary"
-        v-bind="backtestAnalitic.summary"
-      />
+      </h3>
+      <TimeDistribution :trades="backtestAnalitic?.trades" />
+    </template>
 
-      <TradeDetails
-        v-if="backtestAnalitic"
-        :strategy-params="(backtestAnalitic.strategyParams as DefaultStrategyParams)"
-      >
-        <EquityCurve :trades="backtestAnalitic.trades" />
+    <DetailsData
+      v-if="backtestAnalitic?.summary"
+      v-bind="backtestAnalitic.summary"
+    />
 
-        <TradesTable :trades="backtestAnalitic.trades" />
-      </TradeDetails>
-    </CardContent>
-  </Card>
+    <TradeDetails
+      v-if="backtestAnalitic"
+      :strategy-params="(backtestAnalitic.strategyParams as DefaultStrategyParams)"
+    >
+      <EquityCurve :trades="backtestAnalitic.trades" />
+
+      <TradesTable :trades="backtestAnalitic.trades" />
+    </TradeDetails>
+  </UCard>
 </template>

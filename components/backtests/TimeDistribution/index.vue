@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-} from "@/components/ui/dialog";
-import TimeDistributionChart from "./TimeDistributionChart.vue";
-import type { AnaliticTrade } from "@/server/types";
-import { format } from "date-fns";
 import type { HistogramData, UTCTimestamp } from "lightweight-charts";
+import { format } from "date-fns/format";
+import type { AnaliticTrade } from "@/server/types";
+import TimeDistributionChart from "./TimeDistributionChart.vue";
 
 const props = defineProps<{ trades?: AnaliticTrade[] }>();
 
@@ -39,14 +33,11 @@ const gropedTrades = computed<HistogramData[]>(() => {
 </script>
 
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <Button variant="ghost"> Time distribution </Button>
-    </DialogTrigger>
+  <UModal title="Time distribution" :ui="{ content: 'w-full max-w-7xl' }">
+    <UButton label="Time distribution" color="neutral" variant="subtle" />
 
-    <DialogContent class="max-w-screen-lg overflow-y-auto max-h-screen">
-      <DialogHeader> Time distribution </DialogHeader>
+    <template #body>
       <TimeDistributionChart :data="gropedTrades" />
-    </DialogContent>
-  </Dialog>
+    </template>
+  </UModal>
 </template>

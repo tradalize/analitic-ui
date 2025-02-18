@@ -13,4 +13,8 @@ useHead({
 });
 </script>
 
-<template><Pair :asset1 :asset2 /></template>
+<template>
+  <div class="mx-4 h-full">
+    <Pair :asset1 :asset2 />
+  </div>
+</template>

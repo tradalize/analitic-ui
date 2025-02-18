@@ -1,36 +1,74 @@
 <script setup lang="ts">
-import type { ColumnDef } from "@tanstack/vue-table";
+import type { TableColumn } from "@nuxt/ui";
+import { getPaginationRowModel } from "@tanstack/vue-table";
 import type { CorrelationItem } from "./types.js";
-import { DataTable } from "@/components/ui/data-table";
-import OpenCorrelationButton from "./OpenCorrelationButton.vue";
 
-defineProps<{ data: CorrelationItem[] }>();
+defineProps<{ data: CorrelationItem[]; loading?: boolean }>();
 
-const columns: ColumnDef<CorrelationItem>[] = [
-  { accessorKey: "symbol1", header: "Symbol 1" },
-  { accessorKey: "symbol2", header: "Symbol 2" },
-  { accessorKey: "score", header: "Correlation score", enableSorting: true },
+const table = useTemplateRef("table");
+
+const columns: TableColumn<CorrelationItem>[] = [
+  { id: "pair", header: "Pair" },
   {
-    accessorKey: "actions",
-    header: "",
+    accessorKey: "score",
+    header: "Correlation score",
+    enableSorting: true,
+  },
+  {
+    id: "action",
     maxSize: 150,
-    cell: ({ row }) =>
-      h(
-        "div",
-        { class: "flex justify-center" },
-        h(OpenCorrelationButton, {
-          pair: [row.original.symbol1, row.original.symbol2],
-        })
-      ),
   },
 ];
+
+const pagination = ref({
+  pageIndex: 0,
+  pageSize: 10,
+});
 </script>
 
 <template>
-  <DataTable
-    :columns
-    :data
-    :pagination="{ pageSize: 20 }"
-    :default-sorting="[{ id: 'score', desc: true }]"
-  />
+  <div class="w-full space-y-4 pb-4">
+    <UTable
+      ref="table"
+      v-model:pagination="pagination"
+      :columns
+      :data
+      :loading
+      :default-sorting="[{ id: 'score', desc: true }]"
+      :pagination-options="{
+        getPaginationRowModel: getPaginationRowModel(),
+      }"
+    >
+      <template #pair-cell="{ row }">
+        {{ row.original.symbol1 }}-{{ row.original.symbol2 }}
+      </template>
+
+      <template #score-cell="{ row }">
+        {{ row.original.score.toFixed(2) }}
+      </template>
+
+      <template #action-cell="{ row }">
+        <UButton
+          label="Open details"
+          :to="{
+            name: 'Correlation pair',
+            params: { pair: [row.original.symbol1, row.original.symbol2] },
+          }"
+          color="neutral"
+          variant="ghost"
+        />
+      </template>
+    </UTable>
+    <div class="flex justify-center border-t border-(--ui-border) pt-4">
+      <UPagination
+        active-color="neutral"
+        :default-page="
+          (table?.tableApi?.getState().pagination.pageIndex || 0) + 1
+        "
+        :items-per-page="table?.tableApi?.getState().pagination.pageSize"
+        :total="table?.tableApi?.getFilteredRowModel().rows.length"
+        @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)"
+      />
+    </div>
+  </div>
 </template>

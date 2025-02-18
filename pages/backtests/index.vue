@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BacktestsTable from "@/components/backtests/BacktestsTable.vue";
+
 definePageMeta({
   name: "Backtests",
 });
@@ -9,5 +11,7 @@ useHead({
 </script>
 
 <template>
-  <BacktestsTable />
+  <UContainer as="main" >
+    <BacktestsTable />
+  </UContainer>
 </template>

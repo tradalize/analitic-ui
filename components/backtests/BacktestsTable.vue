@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import type { Backtest } from "@tradalize/drizzle-adapter/dist/pg";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import type { TableColumn } from "@nuxt/ui";
 
 const { data: backtests, refresh: refreshBacktests } = await useFetch<
   Backtest[]
->("/api/backtests");
+>("/api/backtests", { default: () => [] });
+
+const columns: TableColumn<Backtest>[] = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "strategyName", header: "Strategy name" },
+  { accessorKey: "strategyParams.symbol", header: "Symbol" },
+  { accessorKey: "strategyParams.timeframe", header: "Timeframe" },
+  { id: "action" },
+];
 
 const deleteId = ref<number>();
 const { execute: deleteBacktest, status: deleteStatus } = useFetch(
@@ -31,38 +31,23 @@ const deleteHandler = (id: number) => {
 </script>
 
 <template>
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead>ID</TableHead>
-        <TableHead>Strategy name</TableHead>
-        <TableHead>Symbol</TableHead>
-        <TableHead>Timeframe</TableHead>
-        <TableHead></TableHead>
-      </TableRow>
-    </TableHeader>
+  <UTable :data="backtests" :columns>
+    <template #action-cell="{ row }">
+      <div class="flex gap-4 justify-center">
+        <UButton size="sm" :to="`/backtests/${row.original.id}`">
+          Open
+        </UButton>
 
-    <TableBody>
-      <TableRow v-for="backtest in backtests" :key="backtest.id">
-        <TableCell>{{ backtest.id }}</TableCell>
-        <TableCell>{{ backtest.strategyName }}</TableCell>
-        <TableCell>{{ backtest.strategyParams?.symbol }}</TableCell>
-        <TableCell>{{ backtest.strategyParams?.timeframe }}</TableCell>
-        <TableCell>
-          <div class="flex gap-4 justify-center">
-            <Button size="sm" :to="`/backtests/${backtest.id}`"> Open </Button>
-
-            <Button
-              variant="destructive"
-              size="sm"
-              :loading="deleteStatus === 'pending'"
-              @click="deleteHandler(backtest.id)"
-            >
-              Delete
-            </Button>
-          </div>
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+        <UButton
+          color="error"
+          variant="outline"
+          size="sm"
+          :loading="deleteStatus === 'pending'"
+          @click="deleteHandler(row.original.id)"
+        >
+          Delete
+        </UButton>
+      </div>
+    </template>
+  </UTable>
 </template>
