@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import DirectionColumn from "@/components/UI/DirectionColumn.vue";
 import type { DefaultStrategyParams } from "@tradalize/drizzle-adapter/dist/pg";
 import type { AnaliticTrade } from "@/server/types";
@@ -86,30 +80,39 @@ provide(IndicatorsListKey, {
 </script>
 
 <template>
-  <Dialog v-model:open="isOpen">
-    <DialogContent
-      v-if="trade"
-      class="max-w-[95vw] max-h-[90dvh] flex flex-col"
-    >
-      <DialogHeader>
-        <DialogTitle>
-          Trade {{ trade.id }} {{ trade.symbol }} {{ trade.timeframe }}
-          <DirectionColumn :direction="trade.direction" />
-        </DialogTitle>
-      </DialogHeader>
+  <UModal
+    v-if="trade"
+    v-model:open="isOpen"
+    :ui="{
+      content: 'w-full max-w-7xl',
+      body: 'max-h-[90dvh] overflow-y-auto',
+      header: 'flex items-center gap-2',
+    }"
+  >
+    <template #header>
+      Trade {{ trade.id }} {{ trade.symbol }} {{ trade.timeframe }}
+      <DirectionColumn :direction="trade.direction" />
+      <UButton
+        icon="i-radix-icons-cross-1"
+        class="ml-auto"
+        size="sm"
+        color="neutral"
+        variant="ghost"
+        @click="closeModal"
+      />
+    </template>
 
-      <div class="overflow-y-auto">
-        <Summary v-bind="trade" />
+    <template #body>
+      <Summary v-bind="trade" />
 
-        <IndicatorsList />
+      <IndicatorsList />
 
-        <TradeChart
-          :trade="trade"
-          :strategy-params="strategyParams"
-          :indicators="indicators"
-        />
-      </div>
-    </DialogContent>
-  </Dialog>
+      <TradeChart
+        :trade="trade"
+        :strategy-params="strategyParams"
+        :indicators="indicators"
+      />
+    </template>
+  </UModal>
   <slot />
 </template>

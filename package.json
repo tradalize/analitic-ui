@@ -14,13 +14,13 @@
     "@tradalize/core": "0.7.2",
     "@tradalize/drizzle-adapter": "^0.3.1",
     "@vueuse/core": "^12.7.0",
-    "date-fns": "^4.1.0",
     "nuxt": "^3.15.4",
     "typescript": "^5.7.3"
   },
   "dependencies": {
     "@nuxt/ui": "^3.0.0-alpha.13",
     "@radix-icons/vue": "^1.0.0",
+    "date-fns": "^4.1.0",
     "lightweight-charts": "^4.1.3"
   }
 }

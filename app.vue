@@ -23,7 +23,7 @@ const navItems: NavigationMenuItem[] = [
 
 <template>
   <UApp>
-    <UContainer as="header">
+    <UContainer as="header" class="mb-4">
       <UNavigationMenu :items="navItems" color="neutral" variant="link" />
     </UContainer>
 

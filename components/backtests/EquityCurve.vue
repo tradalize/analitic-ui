@@ -32,7 +32,7 @@ const pnls = computed(() => {
 });
 
 const chartClickHandler: MouseEventHandler<Time> = ({ seriesData }) => {
-  const time = seriesData.values().next().value.time as UTCTimestamp;
+  const time = seriesData.values().next().value?.time as UTCTimestamp;
 
   const targetTrade = props.trades.find(
     ({ openTime }) => openTime === time * 1000
