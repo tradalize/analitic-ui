@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
+const colorMode = useColorMode();
+
+function switchColorMode() {
+  colorMode.value = colorMode.value === "light" ? "dark" : "light";
+}
+
 const navItems: NavigationMenuItem[] = [
   {
     to: { name: "Home" },
@@ -23,8 +29,13 @@ const navItems: NavigationMenuItem[] = [
 
 <template>
   <UApp>
-    <UContainer as="header" class="mb-4">
+    <UContainer as="header" class="mb-4 flex items-center justify-between">
       <UNavigationMenu :items="navItems" color="neutral" variant="link" />
+      <UButton
+        icon="i-radix-icons-half-2"
+        variant="ghost"
+        @click="switchColorMode"
+      />
     </UContainer>
 
     <nuxt-page />

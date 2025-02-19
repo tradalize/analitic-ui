@@ -35,19 +35,20 @@ const range = ref<DateRange>({
 const start = computed(() => range.value?.start?.toDate("UTC").getTime());
 const end = computed(() => range.value?.end?.toDate("UTC").getTime());
 
-const { data: corrData, refresh } = useFetch(
-  "/api/arbitrage/correlation-chart",
-  {
-    method: "post",
-    body: {
-      symbol1: props.asset1,
-      symbol2: props.asset2,
-      timeframe,
-      start,
-      end,
-    },
-  }
-);
+const {
+  data: corrData,
+  refresh,
+  status,
+} = useFetch("/api/arbitrage/correlation-chart", {
+  method: "post",
+  body: {
+    symbol1: props.asset1,
+    symbol2: props.asset2,
+    timeframe,
+    start,
+    end,
+  },
+});
 
 const handleBack = () => {
   dateModel.value = dateModel.value?.subtract({ days: 1 });
@@ -129,6 +130,8 @@ const handleNext = () => {
       v-if="corrData?.data?.asset1?.length"
       class="w-full overflow-y-auto max-h-[calc(100vh-4rem)]"
     >
+      <UProgress v-if="status === 'pending'" color="neutral" />
+
       <CorrelationChart
         :asset1-title="props.asset1"
         :asset1="corrData.data.asset1"
